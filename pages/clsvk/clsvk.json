@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "clsclient": "plugin://SPARPlugin/spar-clsvkclient",
+    "playcanvas": "plugin://SPARPlugin/spar-playcanvas"
+  },
+  "disableScroll": true
+}

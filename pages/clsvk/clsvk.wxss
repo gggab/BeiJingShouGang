@@ -1,0 +1,13 @@
+.btn-group {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 2;
+}
+.btn {
+  text-align: center;
+  padding: 10rpx 30rpx;
+  border-radius: 10rpx;
+  background: rgba(255, 255, 255, .6);
+  margin: 10rpx;
+}
