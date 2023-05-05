@@ -9,6 +9,16 @@
     "navigationBarTitleText": "Weixin",
     "navigationBarTextStyle":"black"
   },
+  "plugins": {
+    "SPARPlugin": {
+      "version": "1.2.8",
+      "provider": "wx27602f810c4ff00d"
+    },
+    "SPAREngine": {
+      "version": "1.0.0",
+      "provider": "wxd30c5bb763657005"
+    }
+  },
   "style": "v2",
   "sitemapLocation": "sitemap.json"
 }
