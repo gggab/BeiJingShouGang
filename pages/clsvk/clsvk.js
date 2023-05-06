@@ -1,5 +1,6 @@
-const sysInfo = wx.getSystemInfoSync();
 import { threeScene } from "./threeScene";
+
+const sysInfo = wx.getSystemInfoSync();
 Page({
   data: {
     wxapi: wx,
@@ -37,6 +38,9 @@ Page({
       keepScreenOn: true,
     });
   },
+  onUnload() {
+    this.threeScene.destroyScene();
+  },
   // 暂停定位
   pause() {
     this.setData({ running: false });
@@ -51,10 +55,15 @@ Page({
     this.clsclient = e.detail.clsClientContext;
     this.clsVKCameraContext = clsVKCameraContext;
     this.vkCtx = VKSessionContext;
-    console.log(VKSessionContext.self.cameraCanvas);
+    // console.log(VKSessionContext.self.cameraCanvas);
     console.log("onClsClientLoad", clsClientContext, VKSessionContext);
-    console.log(VKSessionContext.self.cameraGL)
+    // console.log(VKSessionContext.self.cameraGL)
     VKSessionContext.VKUpdate = this.onVKUpdate.bind(this);
+    console.log('888888888888888888')
+    // this.initTHREE(VKSessionContext.self.cameraCanvas)
+    // console.log("onClsClientLoad", clsClientContext, VKSessionContext);
+    // console.log(VKSessionContext.self.cameraGL)
+    VKSessionContext.VKUpdate = this.onVKUpdate;
     VKSessionContext.stableDetector.registerStableChange((value) => {
       if (value) {
         console.log('clsVK is stable');
@@ -70,7 +79,9 @@ Page({
     // this.initThree(VKSessionContext.self.cameraCanvas);
     // this.camera = threeCamera;
   },
-
+  // initTHREE(canvas) {
+    
+  // },
   onResize(e) {
     this.setData(e.detail);
   },

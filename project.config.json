@@ -1,14 +1,5 @@
 {
   "description": "项目配置文件",
-  "packOptions": {
-    "ignore": [
-      {
-        "value": ".eslintrc.js",
-        "type": "file"
-      }
-    ],
-    "include": []
-  },
   "setting": {
     "urlCheck": true,
     "es6": true,
@@ -29,8 +20,6 @@
     "compileHotReLoad": false,
     "lazyloadPlaceholderEnable": false,
     "useMultiFrameRuntime": true,
-    "useApiHook": true,
-    "useApiHostProcess": true,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
@@ -50,12 +39,20 @@
     "ignoreUploadUnusedFiles": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.19.4",
-  "appid": "wxc84665f84aefd69d",
-  "projectname": "BeJingShouGang",
   "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
-  }
+  },
+  "libVersion": "2.19.4",
+  "packOptions": {
+    "ignore": [
+      {
+        "value": ".eslintrc.js",
+        "type": "file"
+      }
+    ],
+    "include": []
+  },
+  "appid": "wxc84665f84aefd69d"
 }

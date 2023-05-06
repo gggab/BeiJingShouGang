@@ -1,3 +1,6 @@
+import {createScopedThreejs} from 'threejs-miniprogram'
+import {registerGLTFLoader} from '../../loaders/gltf-loader'
+import cloneGltf from '../../loaders/gltf-clone'
 export class threeScene {
     constructor(canvas) {
         // this._canvas = canvas;
@@ -10,6 +13,28 @@ export class threeScene {
         // this._cube = new THREE.Mesh(this._geometry, this._material);
         // this._scene.add(this._cube);
         // this._camera.position.z = 5;
+
+        const THREE = this.THREE = createScopedThreejs(canvas);
+        registerGLTFLoader(THREE);
+        // 相机
+        this._camera = new THREE.Camera()
+
+        // 场景
+        const scene = this.scene = new THREE.Scene()
+
+        // // 光源
+        // const light1 = new THREE.HemisphereLight(0xffffff, 0x444444) // 半球光
+        // light1.position.set(0, 0.2, 0)
+        // scene.add(light1)
+        const light2 = new THREE.DirectionalLight(0xffffff) // 平行光
+        light2.position.set(0, 0.2, 0.1)
+        scene.add(light2)
+
+        // 渲染层
+        const renderer = this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+        renderer.gammaOutput = true
+        renderer.gammaFactor = 2.2
+        console.log('999999999999')
     }
     get camera() {
         return this._camera;
@@ -36,5 +61,27 @@ export class threeScene {
         // this._geometry.dispose();
         // this._material.dispose();
         // this._renderer.dispose();
+
+        if (this.renderer) {
+            this.renderer.dispose()
+            this.renderer = null
+          }
+          if (this.scene) {
+            this.scene.dispose()
+            this.scene = null
+          }
+          if (this.camera) this.camera = null
+          if (this.model) this.model = null
+          if (this._insertModels) this._insertModels = null
+          if (this.planeBox) this.planeBox = null
+          if (this.mixers) {
+            this.mixers.forEach(mixer => mixer.uncacheRoot(mixer.getRoot()))
+            this.mixers = null
+          }
+          if (this.clock) this.clock = null
+      
+          if (this.THREE) this.THREE = null
+          if (this.canvas) this.canvas = null
+          if (this.session) this.session = null
     }
 }
