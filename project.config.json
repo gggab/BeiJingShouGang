@@ -46,6 +46,7 @@
     "minifyWXML": true,
     "showES6CompileOption": false,
     "useCompilerPlugins": false,
+    "condition": false,
     "ignoreUploadUnusedFiles": true
   },
   "compileType": "miniprogram",

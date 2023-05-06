@@ -12,7 +12,7 @@
                 bind:result="onClsClientResult"
                 bind:resize="onResize"
                 bind:error="onClsClientError"
-                debug="{{true}}"
+                debug="{{showDebugPanel}}"
                 running="{{running}}"
                 minInterval="{{minInterval}}"
                 enhanceDevtools="{{enhanceDevtools}}"
@@ -21,7 +21,4 @@
                 />
     </view>
     <view wx:if="{{error}}">error: {{error}}</view>
-    <view class="btn-group">
-        <view class="btn" wx:if="{{btns.takePhoto}}" bindtap="takePhoto">takePhoto</view>
-    </view>
 </view>
