@@ -19,25 +19,6 @@
                 fackDataConfig="{{fackDataConfig}}"
                 allowRecordingMpose="{{true}}"
                 />
-          <playcanvas
-            wx:if="{{load3d}}"
-            debug="{{debug}}"
-            wxapi="{{wxapi}}"
-            projectUrl="{{projectUrl}}"
-            sceneFileName="{{sceneFileName}}"
-            loadScripts="{{loadScripts}}"
-            loadNetworkScripts="{{loadNetworkScripts}}"
-            bind:loadProgress="on3dLoadProgress"
-            bind:error="on3dError"
-            bind:load="on3dLoad"
-            bind:unload="on3dUnload"
-            bindtouchend="onTouchEnd"
-            showLoading="{{true}}"
-            canvasStyleWidth="{{canvasW}}"
-            canvasStyleHeight="{{canvasH}}"
-            canvasStyleLeft="{{canvasL}}"
-            canvasStyleTop="{{canvasT}}"
-        ></playcanvas>
     </view>
     <view wx:if="{{error}}">error: {{error}}</view>
     <view class="btn-group">

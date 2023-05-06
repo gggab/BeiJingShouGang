@@ -77,7 +77,9 @@ Page({
     this.clsclient = e.detail.clsClientContext;
     this.clsVKCameraContext = clsVKCameraContext;
     this.vkCtx = VKSessionContext;
+    console.log(VKSessionContext.self.cameraCanvas);
     console.log("onClsClientLoad", clsClientContext, VKSessionContext);
+    console.log(VKSessionContext.self.cameraGL)
     VKSessionContext.VKUpdate = this.onVKUpdate;
     VKSessionContext.stableDetector.registerStableChange((value) => {
       if (value) {
@@ -87,10 +89,10 @@ Page({
       }
     });
     this.annitations = VKSessionContext.self.clsdata.ema.annotations;
-    console.log(this.annitations);
-    if (this._app3d) {
-      this._app3d.fire("setAnnotation", this.annitations);
-    }
+    // console.log(this.annitations);
+    // if (this._app3d) {
+    //   this._app3d.fire("setAnnotation", this.annitations);
+    // }
   },
   async takePhoto() {
     if (!this.clsVKCameraContext) return console.warn('!clsVKCameraContext');
