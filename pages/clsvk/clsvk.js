@@ -29,13 +29,12 @@ Page({
     cameraHeight: `${sysInfo.windowHeight * 0.8}px`,
 
     running: true,
-    minInterval: 1000, // 识别间隔
-    motion: true,
-    showScan: true,
+    // minInterval: 1000, // 识别间隔
+    // motion: true,
+    // showScan: false,
     load3d: false,
     
     projectUrl: 'https://ball.forgenius.cn/PlayBasketball_0507_3',
-    // projectUrl: 'http://192.168.18.172:8080',
     sceneFileName: '1729120.json',
     // projectUrl: 'https://sightp-tour-cdn.sightp.com/wxapp/apps/Test/pdrjy_office_v1',
     // sceneFileName: '1434681.json',
@@ -59,7 +58,7 @@ Page({
   onClsClientLoad(e) {
     let { clsClientContext, VKSessionContext, clsVKCameraContext } = e.detail;
     this.clsclient = e.detail.clsClientContext;
-    this.clsVKCameraContext = clsVKCameraContext;
+    // this.clsVKCameraContext = clsVKCameraContext;
     this.vkCtx = VKSessionContext;
     // console.log("onClsClientLoad", clsClientContext, VKSessionContext);
     VKSessionContext.VKUpdate = this.onVKUpdate;
@@ -70,11 +69,6 @@ Page({
         console.log('clsVK is not stable');
       }
     });
-    this.annitations = VKSessionContext.self.clsdata.ema.annotations;
-    console.log(this.annitations);
-    if (this._app3d) {
-      this._app3d.fire("setAnnotation", this.annitations);
-    }
   },
   onResize(e) {
     this.setData(e.detail);
@@ -113,15 +107,15 @@ Page({
     }
   },
   onClsClientResult(e) {
-    console.log("onClsClientResult", e.detail);
     if (e.detail.statusCode == 0) {
+      // console.log("onClsClientResult", e.detail);
         // 识别成功
     } else {
-      console.log('当前设备朝向是否适合cls:', this.vkCtx.stableDetector.isSuitForCls);
+      // console.log('当前设备朝向是否适合cls:', this.vkCtx.stableDetector.isSuitForCls);
     }
   },
   onClsClientError(e) {
-    console.log("onClsClientError", e.detail);
+    // console.log("onClsClientError", e.detail);
     this.setData({
       error: e.detail,
     });
@@ -144,42 +138,42 @@ Page({
 
     this.vkCtx?.setApp3d(this._app3d);
 
-    if (!this.annitations) {
-      this._app3d.on("setAnnotation", (annitations) => {
-        annitations.forEach(anno => {
-          let cube = new this._pc.Entity();
-          cube.addComponent("model", {
-            type: "box"
-          })
-          let p = anno.transform.position;
-          let r = anno.transform.rotation;
-          let s = anno.transform.scale;
-          cube.setLocalPosition(p.x, p.y, p.z);
-          cube.setLocalRotation(r.x, r.y, r.z, r.w);
-          cube.setLocalScale(s.x, s.y, s.z);
-        })
-      })
-    }
-    if (this.annitations) {
-      this.annitations.forEach(anno => {
-        let cube = new this._pc.Entity();
-        cube.addComponent("model", {
-          type: "box"
-        })
-        let p = anno.transform.position;
-        let r = anno.transform.rotation;
-        let s = anno.transform.scale;
-        cube.setLocalPosition(p.x, p.y, p.z);
-        cube.setLocalRotation(r.x, r.y, r.z, r.w);
-        cube.setLocalScale(s.x, s.y, s.z);
-      })
-    }
+    // if (!this.annitations) {
+    //   this._app3d.on("setAnnotation", (annitations) => {
+    //     annitations.forEach(anno => {
+    //       let cube = new this._pc.Entity();
+    //       cube.addComponent("model", {
+    //         type: "box"
+    //       })
+    //       let p = anno.transform.position;
+    //       let r = anno.transform.rotation;
+    //       let s = anno.transform.scale;
+    //       cube.setLocalPosition(p.x, p.y, p.z);
+    //       cube.setLocalRotation(r.x, r.y, r.z, r.w);
+    //       cube.setLocalScale(s.x, s.y, s.z);
+    //     })
+    //   })
+    // }
+    // if (this.annitations) {
+    //   this.annitations.forEach(anno => {
+    //     let cube = new this._pc.Entity();
+    //     cube.addComponent("model", {
+    //       type: "box"
+    //     })
+    //     let p = anno.transform.position;
+    //     let r = anno.transform.rotation;
+    //     let s = anno.transform.scale;
+    //     cube.setLocalPosition(p.x, p.y, p.z);
+    //     cube.setLocalRotation(r.x, r.y, r.z, r.w);
+    //     cube.setLocalScale(s.x, s.y, s.z);
+    //   })
+    // }
     this.setData({ running: true });
   },
-  preview() {
-    wx.previewImage({ urls: ["https://mp.easyar.cn/artravel/puruan_scan_sample.jpg"] });
-  },
-  dismiss() {
-    this.setData({ showScan: false });
-  },
+  // preview() {
+  //   wx.previewImage({ urls: ["https://mp.easyar.cn/artravel/puruan_scan_sample.jpg"] });
+  // },
+  // dismiss() {
+  //   this.setData({ showScan: false });
+  // },
 });
