@@ -1,5 +1,5 @@
 <view class="container">
-  <image class="background" src="true.jpg"></image>
+  <image class="background" src="https://ball.forgenius.cn/true.jpg"></image>
   <view class="welcome">
   <!-- <text class="title">欢迎来到耐克</text> -->
   <br />
