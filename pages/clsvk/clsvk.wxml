@@ -1,4 +1,8 @@
+<canvas type="webgl" id="webgl" style="width: {{width}}px; height: {{height}}px" bindtouchend="onTouchEnd">
+    <cover-view class="info fps">fps: {{fps}}</cover-view>
+</canvas>
 <view style="position: relative; width: 100vw; height: 100vh; overflow: hidden;">
+
     <view style="position: relative; width: {{ cameraWidth }}; height: {{ cameraHeight }};">
         <clsclient
                 includePerf="{{true}}"
@@ -19,7 +23,7 @@
                 fackDataConfig="{{fackDataConfig}}"
                 allowRecordingMpose="{{false}}"
                 />
-          <playcanvas
+          <!-- <playcanvas
             wx:if="{{load3d}}"
             debug="{{debug}}"
             wxapi="{{wxapi}}"
@@ -37,7 +41,7 @@
             canvasStyleHeight="{{canvasH}}"
             canvasStyleLeft="{{canvasL}}"
             canvasStyleTop="{{canvasT}}"
-        ></playcanvas>
+        ></playcanvas> -->
     </view>
     <view wx:if="{{error}}">error: {{error}}</view>
     <!-- <view class="btn-group">
