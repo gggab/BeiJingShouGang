@@ -1,6 +1,5 @@
-import { threeScene } from "./threeScene";
-
 const sysInfo = wx.getSystemInfoSync();
+
 Page({
   data: {
     wxapi: wx,
@@ -9,16 +8,15 @@ Page({
     canvasT: 0,
     canvasL: 0,
     // 是否显示左上角的调试信息
-    showDebugPanel: true,
+    showDebugPanel: false,
 
-    // 新园区
+    // // 新园区
     // clsConfig: {
     //   apiKey: "da795ff1828d676dab9aaf9c018fe6eb",
     //   apiSecret: "4e34c727701c60ba10435d628c485137564e932b6dd50983389894b9d8ffdade",
     //   clsAppId: "98e15642624043b7992e70c862818b24",
     //   arannotationId: "8233a115b0857f2d46d1bb18aaf60b75"
     // },
-
     // 首钢
     clsConfig: {
       apiKey: "c35172addcdff7780f4ca593b38520c7",
@@ -30,22 +28,30 @@ Page({
     cameraWidth: `${sysInfo.windowWidth}px`,
     cameraHeight: `${sysInfo.windowHeight * 0.8}px`,
 
-    running: false,
+    running: true,
     minInterval: 1000, // 识别间隔
+    motion: true,
+    showScan: true,
+    load3d: false,
+    
+    projectUrl: 'https://ball.forgenius.cn/PlayBasketball_0507_3',
+    // projectUrl: 'http://192.168.18.172:8080',
+    sceneFileName: '1729120.json',
+    // projectUrl: 'https://sightp-tour-cdn.sightp.com/wxapp/apps/Test/pdrjy_office_v1',
+    // sceneFileName: '1434681.json',
+    // enhanceDevtools: sysInfo.platform === 'devtools',
+    // loadScripts,
+    // loadNetworkScripts: {},
   },
   onLoad: function (options) {
     wx.setKeepScreenOn({
       keepScreenOn: true,
     });
+    this.setData({ load3d: true })
   },
-  onUnload() {
-    this.threeScene.destroyScene();
-  },
-  // 暂停定位
   pause() {
     this.setData({ running: false });
   },
-  // 重启定位
   resume() {
     this.setData({ running: true });
   },
@@ -55,14 +61,7 @@ Page({
     this.clsclient = e.detail.clsClientContext;
     this.clsVKCameraContext = clsVKCameraContext;
     this.vkCtx = VKSessionContext;
-    // console.log(VKSessionContext.self.cameraCanvas);
-    console.log("onClsClientLoad", clsClientContext, VKSessionContext);
-    // console.log(VKSessionContext.self.cameraGL)
-    VKSessionContext.VKUpdate = this.onVKUpdate.bind(this);
-    console.log('888888888888888888')
-    // this.initTHREE(VKSessionContext.self.cameraCanvas)
     // console.log("onClsClientLoad", clsClientContext, VKSessionContext);
-    // console.log(VKSessionContext.self.cameraGL)
     VKSessionContext.VKUpdate = this.onVKUpdate;
     VKSessionContext.stableDetector.registerStableChange((value) => {
       if (value) {
@@ -72,16 +71,11 @@ Page({
       }
     });
     this.annitations = VKSessionContext.self.clsdata.ema.annotations;
-    // cls初始化完成，可以开始识别
-    this.setData({running: true});
-    // TODO：初始化 THREE
-    this.threeScene = new threeScene(VKSessionContext.self.cameraCanvas);
-    // this.initThree(VKSessionContext.self.cameraCanvas);
-    // this.camera = threeCamera;
+    console.log(this.annitations);
+    if (this._app3d) {
+      this._app3d.fire("setAnnotation", this.annitations);
+    }
   },
-  // initTHREE(canvas) {
-    
-  // },
   onResize(e) {
     this.setData(e.detail);
   },
@@ -105,22 +99,23 @@ Page({
    * }
    */
   onVKUpdate(e) {
-    // 每帧被调用，返回相机世界矩阵和投影矩阵
     let data = e;//.detail;
-    this.threeScene.setProjectionMatrix(data.vkCamera.getProjectionMatrix(this.clsVKCameraContext.nearClip, this.clsVKCameraContext.farClip));
-    // vkCameraPose 是大地图坐标系下的相机位姿，定位成功至少一次后，才会有值
-    // 建议没有值的时候隐藏场景模型
-    this.threeScene.setWorldMatrix(data.clsCameraPose || data.vkCameraPose);
-    this.threeScene.updateScene();
+    if (this._app3d && this._camera3d && this._camera3d.camera) {
+      const projectionMatrix = data.vkCamera.getProjectionMatrix(this._camera3d.camera.nearClip, this._camera3d.camera.farClip);
+      let vp = new this._pc.Mat4().set(projectionMatrix);
+      this._camera3d.camera.projectionMatrix.set(vp.data);
+
+      if (data.clsCameraPose) {
+        this._camera3d.worldTransform.set(data.clsCameraPose);
+      } else {
+        this._camera3d.worldTransform.set(data.vkCameraPose);
+      }
+    }
   },
   onClsClientResult(e) {
     console.log("onClsClientResult", e.detail);
     if (e.detail.statusCode == 0) {
         // 识别成功
-        console.log(e.detail);
-        if (!this.firstScc) {
-          this.firstScc = true;
-        }
     } else {
       console.log('当前设备朝向是否适合cls:', this.vkCtx.stableDetector.isSuitForCls);
     }
@@ -130,5 +125,61 @@ Page({
     this.setData({
       error: e.detail,
     });
+  },
+  on3dLoadProgress: function (progress) {
+    // console.log(progress); 
+  },
+  on3dError: function (e) {
+    console.error(e);
+  },
+  on3dLoad: function (arg) {
+    console.log('3d Loaded');
+
+    this._pc = arg.detail.pc;
+    this._app3d = arg.detail.app;
+    this._app3d.graphicsDevice.maxPixelRatio = 2;
+    this._camera3d = arg.detail.camera;
+    this._canvas3d = arg.detail.canvas;
+    this._gl = arg.detail.app.graphicsDevice.gl;
+
+    this.vkCtx?.setApp3d(this._app3d);
+
+    if (!this.annitations) {
+      this._app3d.on("setAnnotation", (annitations) => {
+        annitations.forEach(anno => {
+          let cube = new this._pc.Entity();
+          cube.addComponent("model", {
+            type: "box"
+          })
+          let p = anno.transform.position;
+          let r = anno.transform.rotation;
+          let s = anno.transform.scale;
+          cube.setLocalPosition(p.x, p.y, p.z);
+          cube.setLocalRotation(r.x, r.y, r.z, r.w);
+          cube.setLocalScale(s.x, s.y, s.z);
+        })
+      })
+    }
+    if (this.annitations) {
+      this.annitations.forEach(anno => {
+        let cube = new this._pc.Entity();
+        cube.addComponent("model", {
+          type: "box"
+        })
+        let p = anno.transform.position;
+        let r = anno.transform.rotation;
+        let s = anno.transform.scale;
+        cube.setLocalPosition(p.x, p.y, p.z);
+        cube.setLocalRotation(r.x, r.y, r.z, r.w);
+        cube.setLocalScale(s.x, s.y, s.z);
+      })
+    }
+    this.setData({ running: true });
+  },
+  preview() {
+    wx.previewImage({ urls: ["https://mp.easyar.cn/artravel/puruan_scan_sample.jpg"] });
+  },
+  dismiss() {
+    this.setData({ showScan: false });
   },
 });
