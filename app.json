@@ -1,8 +1,7 @@
 {
   "pages":[
     "pages/index/index",
-    "pages/clsvk/clsvk",
-    "pages/logs/logs"
+    "pages/clsvk/clsvk"
   ],
   "window":{
     "backgroundTextStyle":"light",
