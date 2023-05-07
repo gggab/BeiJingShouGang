@@ -11,6 +11,6 @@ App({
 
     await ARPlugin.setLicense(license);
     console.log('-----初始化插件完成-----');
-    console.log(new Date(Date.now()));
+    console.log(util.formatTime(new Date(Date.now())));
   }
 })
