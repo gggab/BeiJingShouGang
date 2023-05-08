@@ -1,2 +1,9 @@
 <!--pages/cls-three/cls-three.wxml-->
-<text>pages/cls-three/cls-three.wxml</text>
+<canvas
+  type="webgl"
+  id="webgl"
+  style="width: {{width}}px; height: {{height}}px"
+  bindtouchend="onTouchEnd"
+>
+    <cover-view class="info fps">fps: {{fps}}</cover-view>
+</canvas>

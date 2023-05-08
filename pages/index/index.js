@@ -8,7 +8,7 @@ Page({
   // 事件处理函数
   bindViewTap() {
     wx.navigateTo({
-      url: '../clsvk/clsvk'
+      url: '../cls-three/cls-three'
     })
   }
 })

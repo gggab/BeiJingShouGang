@@ -1,4 +1,5 @@
-import { Recognizer } from "clsclient";
+// import { Recognizer } from "clsclient-wx";
+import { threeScene } from "./threeScene";
 const clsConfig = {
   apiKey: "c35172addcdff7780f4ca593b38520c7",
   apiSecret: "fb4c0a2f89cf64dc7cf2a63a7c5472029a05213e22688a3cc443a7dc39d227d9",
@@ -22,7 +23,9 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    width: 1,
+    height: 1,
+    fps: 0,
   },
 
   /**
@@ -32,10 +35,78 @@ Page({
 
   },
 
+  onReady() {
+    wx.createSelectorQuery()
+      .select('#webgl')
+      .node()
+      .exec(async res => {
+        this.canvas = res[0].node
+        await this.initVK();
+        // this.initCLS();
+
+        if (this.threeScene) {
+          this.threeScene.loadModel('https://dldir1.qq.com/weixin/miniprogram/space_27f8c621878e44d8b05916163ce83b40.glb');
+        }
+      })
+  },
+  async initVK() {
+    const isSupportV2 = wx.isVKSupport('v2')
+    if (!isSupportV2) return console.error('v2 is not support')
+
+    const session = this.session = wx.createVKSession({
+      track: {
+        plane: { mode: 3 },
+      },
+      gl: this.canvas.getContext("webgl"),
+      version: 'v2'
+    })
+
+    const info = wx.getSystemInfoSync();
+    const pixelRatio = info.pixelRatio;
+    const calcSize = (width, height) => {
+      console.log(`canvas size: width = ${width} , height = ${height}`)
+
+      this.canvas.width = width * pixelRatio / 2
+      this.canvas.height = height * pixelRatio / 2
+      console.log(`window width: ${width},window height: ${height}`);
+      console.log(`canvas width: ${this.canvas.width}, canvas height: ${this.canvas.height}`);
+      this.setData({
+        width,
+        height,
+      })
+    }
+    calcSize(info.windowWidth, info.windowHeight);
+
+    session.on('resize', () => {
+      const info = wx.getSystemInfoSync()
+      calcSize(info.windowWidth, info.windowHeight)
+    })
+
+    return new Promise((resolve, reject) => {
+      session.start(err => {
+        if (err) return console.error('VK error', err);
+        const canvas = this.canvas;
+
+        const onFrame = async timestamp => {
+          const frame = this.vkFrame = session.getVKFrame(canvas.width, canvas.height);
+          if (frame) {
+            if (this.threeScene) {
+              this.threeScene.render(frame);
+            }
+            this.analysis();
+          }
+          session.requestAnimationFrame(onFrame)
+        }
+        session.requestAnimationFrame(onFrame)
+        this.threeScene = new threeScene(canvas);
+        resolve();
+      })
+    })
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady() {
+  initCLS() {
     this.captureCanvas = createOffscreenCanvas({ type: '2d', width: 0, height: 0 });
     // NEED
     // this.vkFrame
@@ -103,7 +174,9 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload() {
-
+    if (this.threeScene) {
+      this.threeScene.destroyScene();
+    }
   },
 
   /**
@@ -125,6 +198,22 @@ Page({
    */
   onShareAppMessage() {
 
+  },
+  analysis() {
+    if (!this._lastTs) this._lastTs = Date.now()
+    const ts = Date.now()
+
+    if (!this._fc) this._fc = this._lastFc = 0
+    this._fc++
+
+    // 1s 统计一次
+    if (ts - this._lastTs > 1000) {
+      const fps = Math.round((this._fc - this._lastFc) * 1000 / (ts - this._lastTs))
+      this._lastFc = this._fc
+
+      this.setData({ fps })
+      this._lastTs = ts
+    }
   },
   /**
    * cls 识别成功
