@@ -1,6 +1,5 @@
 {
   "usingComponents": {
-    "clsclient": "plugin://SPARPlugin/spar-clsvkclient"
   },
   "disableScroll": true
 }

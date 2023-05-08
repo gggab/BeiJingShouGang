@@ -1,0 +1,5 @@
+{
+    "dependencies": {
+        "clsclient-wx": "file:.yalc/clsclient-wx"
+    }
+}

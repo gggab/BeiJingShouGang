@@ -1,4 +1,4 @@
-import {createScopedThreejs} from 'threejs-miniprogram'
+import {createScopedThreejs} from '../../threejs-miniprogram/index'
 import {registerGLTFLoader} from '../../loaders/gltf-loader'
 // import cloneGltf from '../../loaders/gltf-clone'
 

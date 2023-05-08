@@ -1,24 +1,16 @@
 {
-  "pages":[
+  "pages": [
     "pages/index/index",
-    "pages/clsvk/clsvk"
+    "pages/clsvk/clsvk",
+    "pages/cls-three/cls-three"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
+  "window": {
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "Weixin",
-    "navigationBarTextStyle":"black"
+    "navigationBarTextStyle": "black"
   },
-  "plugins": {
-    "SPARPlugin": {
-      "version": "1.2.9",
-      "provider": "wx27602f810c4ff00d"
-    },
-    "SPAREngine": {
-      "version": "1.0.0",
-      "provider": "wxd30c5bb763657005"
-    }
-  },
+  "plugins": {},
   "style": "v2",
   "sitemapLocation": "sitemap.json"
 }
