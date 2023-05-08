@@ -36,14 +36,20 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
+    // 穿件离屏截图 canvas
     this.captureCanvas = createOffscreenCanvas({ type: '2d', width: 0, height: 0 });
+
+    //this.capturePixelRatio = 480/this.session.cameraSize.width
+
     // NEED
     // this.vkFrame
     // this.session
 
     // 创建 clsClinet
     this.clsClient = new Recognizer({ ...prop.clsConfig, autoFilterEma: false });
-    this.clsClient.getCameraWithParam = async () => {
+
+    // 注入获取图片和矩阵的方法
+    this.clsClient.getCameraWithParam = () => {
       // timestamp: number,
       // cameraPos?: number[],
       // intrinsics?: number[],
@@ -59,8 +65,8 @@ Page({
           this.cameraImageWithPose.intrinsics = [intrinsics[0] * this.capturePixelRatio, intrinsics[4] * this.capturePixelRatio, intrinsics[7] * this.capturePixelRatio, intrinsics[6] * this.capturePixelRatio];
 
         const canvas2d = this.captureCanvas;
-        const width = 480//this.session.cameraSize.width * this.capturePixelRatio;
-        const height = 640//this.session.cameraSize.height * this.capturePixelRatio;
+        const width = this.session.cameraSize.width * this.capturePixelRatio;
+        const height = this.session.cameraSize.height * this.capturePixelRatio;
         pixels = frame.getCameraBuffer(width, height);
         if (!this.captureCTX) {
           this.captureCTX = canvas2d.getContext('2d');
@@ -77,6 +83,7 @@ Page({
         });
       });
     }
+    // 开始识别，传入回调
     this.clsClient.start({ 
       minInterval: clsConfig.interval, 
       onFound: this.onClsResult, 
