@@ -1,6 +1,6 @@
 import { createScopedThreejs } from 'threejs-miniprogram'
 import { registerGLTFLoader } from '../../loaders/gltf-loader'
-// import cloneGltf from '../../loaders/gltf-clone'
+import cloneGltf from '../../loaders/gltf-clone'
 import { yuvBehavior } from './yuvBehavior';
 export class threeScene {
     constructor(canvas) {
@@ -24,6 +24,9 @@ export class threeScene {
         const renderer = this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
         renderer.gammaOutput = true
         renderer.gammaFactor = 2.2
+        // renderer.setDepthTest(true);
+
+        this.clock = new THREE.Clock();
 
         this.yuvBehavior = new yuvBehavior(renderer);
         this.yuvBehavior.initGL();
@@ -34,7 +37,10 @@ export class threeScene {
     render(frame, clsWorldMatrix) {
         this.yuvBehavior.renderGL(frame);
 
-        const camera = frame.camera
+        const camera = frame.camera;
+
+        // 更新动画
+        this.updateAnimation();
 
         // 相机
         if (camera) {
@@ -66,12 +72,42 @@ export class threeScene {
     async loadModel(url) {
         const loader = new this.THREE.GLTFLoader();
         loader.load(url, gltf => {
-            const model = this.model = gltf.scene
-            model.matrixAutoUpdate = false
-            model.position.set(0, 0, -0.5)
-            model.scale.set(0.01, 0.01, 0.01)
-            this.scene.add(model)
+            this.model = {
+                scene: gltf.scene,
+                animations: gltf.animations
+            }
+            const {scene, animations} = cloneGltf(this.model, this.THREE)
+            const mixer = new this.THREE.AnimationMixer(scene);
+            for (let i = 0; i < animations.length; i++) {
+                const clip = animations[i]
+                console.log(clip.name);
+                if (clip.name === 'Dance') {
+                    const action = mixer.clipAction(clip)
+                    action.play()
+                }
+            }
+            if (animations.length === 1) {
+                const clip = animations[0];
+                const action = mixer.clipAction(clip);
+                action.play();
+            }
+            scene._mixer = mixer;
+            this.mixers = this.mixers || [];
+            this.mixers.push(mixer);
+
+            const model = new this.THREE.Object3D()
+            model.add(scene)
+            this.scene.add(model);
+            // const model = this.model = gltf.scene
+            // model.matrixAutoUpdate = false
+            // model.position.set(0, 0, -0.5)
+            // model.scale.set(0.01, 0.01, 0.01)
+            // this.scene.add(model)
         })
+    }
+    updateAnimation() {
+        const dt = this.clock.getDelta()
+        if (this.mixers) this.mixers.forEach(mixer => mixer.update(dt))
     }
     // 外部调用每帧调用，渲染一帧的场景
     updateScene() {
