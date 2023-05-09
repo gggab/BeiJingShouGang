@@ -4,7 +4,7 @@ var __DEFINE__ = function(modId, func, req) { var m = { exports: {}, _tempexport
 var __REQUIRE__ = function(modId, source) { if(!__MODS__[modId]) return require(source); if(!__MODS__[modId].status) { var m = __MODS__[modId].m; m._exports = m._tempexports; var desp = Object.getOwnPropertyDescriptor(m, "exports"); if (desp && desp.configurable) Object.defineProperty(m, "exports", { set: function (val) { if(typeof val === "object" && val !== m._exports) { m._exports.__proto__ = val.__proto__; Object.keys(val).forEach(function (k) { m._exports[k] = val[k]; }); } m._tempexports = val }, get: function () { return m._tempexports; } }); __MODS__[modId].status = 1; __MODS__[modId].func(__MODS__[modId].req, m, m.exports); } return __MODS__[modId].m.exports; };
 var __REQUIRE_WILDCARD__ = function(obj) { if(obj && obj.__esModule) { return obj; } else { var newObj = {}; if(obj != null) { for(var k in obj) { if (Object.prototype.hasOwnProperty.call(obj, k)) newObj[k] = obj[k]; } } newObj.default = obj; return newObj; } };
 var __REQUIRE_DEFAULT__ = function(obj) { return obj && obj.__esModule ? obj.default : obj; };
-__DEFINE__(1683552019857, function(require, module, exports) {
+__DEFINE__(1683552019915, function(require, module, exports) {
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => {
@@ -890,7 +890,7 @@ var __publicField = (obj, key, value) => {
     constructor() {
       __publicField(this, "currentFusion");
       __publicField(this, "poseFusionResult");
-      __publicField(this, "_enable");
+      __publicField(this, "_enable", true);
       __publicField(this, "poseFusions");
       __publicField(this, "localFusion");
       __publicField(this, "lastFusion");
@@ -1353,11 +1353,15 @@ var __publicField = (obj, key, value) => {
         if (cameraImageWithPose.intrinsics) {
           this.cameraParam = JSON.stringify(cameraImageWithPose.intrinsics);
         }
+        console.log("\u8F6C\u6362\u4E3Apost\u8BF7\u6C42\u4E2D\u7684\u6587\u4EF6");
         let data = this.__composeRequestFile(cameraImageWithPose.base64Img, token);
+        console.log("\u53D1\u9001\u8BF7\u6C42");
         return this.__sendClsRequest(data);
       }).then((r) => {
+        console.log("cls\u8BF7\u6C42\u7ED3\u679C", r);
         res = this.__clsResult(r, profile);
       }).catch((e) => {
+        console.log("cls\u8BF7\u6C42\u5931\u8D25", e);
         if (!(e && e.errMsg === "request:fail abort")) {
           res = this.__clsError(e, profile);
         }
@@ -1371,9 +1375,6 @@ var __publicField = (obj, key, value) => {
         appId: this.clsdata.clsAppId,
         cameraParam: this.cameraParam
       };
-      let location = this.data.location && this.data.location.indexOf("{") > -1 ? this.data.location : this.location;
-      if (location)
-        params.location = location;
       if (this.data.debug < 3)
         console.log("params", params);
       if (this.data.debug < 2)
@@ -1453,8 +1454,10 @@ Content-Disposition: form-data;name="${key}"\r
         params.worlds = worlds;
         if (this.poseFusion) {
           const arKitPos = Array.from(new Mat4().set(profile.requestCameraPos).clone().transpose().getInverse().data);
+          console.log("\u8BF7\u6C42\u878D\u5408");
           this.poseFusion.insertData(arKitPos, result.pose, profile.requestTime).then((res2) => {
             var _a2;
+            console.log("\u878D\u5408\u7ED3\u679C", res2);
             params.fusionsStatus = res2 == null ? void 0 : res2.status;
             params.fusionPose = res2 == null ? void 0 : res2.fusionPose;
             (_a2 = this.onFound) == null ? void 0 : _a2.call(this, params);
@@ -1463,6 +1466,7 @@ Content-Disposition: form-data;name="${key}"\r
           (_a = this.onFound) == null ? void 0 : _a.call(this, params);
         }
       } else {
+        console.log("\u8BC6\u522B\u5931\u8D25", res);
         (_b = this.onLost) == null ? void 0 : _b.call(this, params);
       }
       return params;
@@ -1501,7 +1505,7 @@ Content-Disposition: form-data;name="${key}"\r
 });
 
 }, function(modId) {var map = {}; return __REQUIRE__(map[modId], modId); })
-return __REQUIRE__(1683552019857);
+return __REQUIRE__(1683552019915);
 })()
 //miniprogram-npm-outsideDeps=["abab","jssha"]
 //# sourceMappingURL=index.js.map

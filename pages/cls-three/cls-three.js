@@ -1,4 +1,4 @@
-// import { Recognizer } from "clsclient-wx";
+import { Recognizer } from "clsclient-wx";
 import { threeScene } from "./threeScene";
 const clsConfig = {
   apiKey: "c35172addcdff7780f4ca593b38520c7",
@@ -16,6 +16,7 @@ const clsConfig = {
   timeout: 5000,
   interval: 3000
 }
+const JPEG_QUALITY = 70;
 // pages/cls-three/cls-three.js
 Page({
 
@@ -42,7 +43,7 @@ Page({
       .exec(async res => {
         this.canvas = res[0].node
         await this.initVK();
-        // this.initCLS();
+        this.initCLS();
 
         if (this.threeScene) {
           this.threeScene.loadModel('https://dldir1.qq.com/weixin/miniprogram/space_27f8c621878e44d8b05916163ce83b40.glb');
@@ -108,19 +109,20 @@ Page({
    */
   initCLS() {
     // 穿件离屏截图 canvas
-    this.captureCanvas = createOffscreenCanvas({ type: '2d', width: 0, height: 0 });
+    this.captureCanvas = wx.createOffscreenCanvas({ type: '2d', width: 0, height: 0 });
 
-    //this.capturePixelRatio = 480/this.session.cameraSize.width
+    this.capturePixelRatio = 480 / this.session.cameraSize.width
 
     // NEED
     // this.vkFrame
     // this.session
 
     // 创建 clsClinet
-    this.clsClient = new Recognizer({ ...prop.clsConfig, autoFilterEma: false });
+    this.clsClient = new Recognizer({ ...clsConfig, autoFilterEma: false }, null, true);
 
     // 注入获取图片和矩阵的方法
     this.clsClient.getCameraWithParam = () => {
+      console.log("call getCameraWithParam");
       // timestamp: number,
       // cameraPos?: number[],
       // intrinsics?: number[],
@@ -136,9 +138,10 @@ Page({
           this.cameraImageWithPose.intrinsics = [intrinsics[0] * this.capturePixelRatio, intrinsics[4] * this.capturePixelRatio, intrinsics[7] * this.capturePixelRatio, intrinsics[6] * this.capturePixelRatio];
 
         const canvas2d = this.captureCanvas;
+        
         const width = this.session.cameraSize.width * this.capturePixelRatio;
         const height = this.session.cameraSize.height * this.capturePixelRatio;
-        pixels = frame.getCameraBuffer(width, height);
+        let pixels = frame.getCameraBuffer(width, height);
         if (!this.captureCTX) {
           this.captureCTX = canvas2d.getContext('2d');
         }
@@ -150,16 +153,25 @@ Page({
           let dataurl = canvas2d.toDataURL("image/jpeg", JPEG_QUALITY / 100);
           this.cameraImageWithPose.base64 = dataurl;
           this.cameraImageWithPose.base64Img = dataurl.substr(23);
+          for (let key in this.cameraImageWithPose) {
+            if (key == 'base64' || key == 'base64Img') {
+              console.log(key, this.cameraImageWithPose[key].length);
+              continue;
+            }
+            console.log(key, this.cameraImageWithPose[key]);
+          }
           resolve(this.cameraImageWithPose);
         });
       });
     }
-    // 开始识别，传入回调
-    this.clsClient.start({ 
-      minInterval: clsConfig.interval, 
-      onFound: this.onClsResult, 
-      onLost: this.onClsLost,
-      onError: this.onClsError 
+    this.clsClient.getArannotations().then((res) => {
+      // 开始识别，传入回调
+      this.clsClient.start({
+        minInterval: clsConfig.interval,
+        onFound: this.onClsResult,
+        onLost: this.onClsLost,
+        onError: this.onClsError
+      });
     });
   },
 
@@ -183,6 +195,9 @@ Page({
   onUnload() {
     if (this.threeScene) {
       this.threeScene.destroyScene();
+    }
+    if (this.clsClient) {
+      this.clsClient.stop();
     }
   },
 
