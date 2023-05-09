@@ -1,5 +1,5 @@
-import {createScopedThreejs} from 'threejs-miniprogram'
-import {registerGLTFLoader} from '../../loaders/gltf-loader'
+import { createScopedThreejs } from 'threejs-miniprogram'
+import { registerGLTFLoader } from '../../loaders/gltf-loader'
 // import cloneGltf from '../../loaders/gltf-clone'
 import { yuvBehavior } from './yuvBehavior';
 export class threeScene {
@@ -31,7 +31,7 @@ export class threeScene {
     get camera() {
         return this._camera;
     }
-    render(frame) {
+    render(frame, clsWorldMatrix) {
         this.yuvBehavior.renderGL(frame);
 
         const camera = frame.camera
@@ -39,8 +39,13 @@ export class threeScene {
         // 相机
         if (camera) {
             this.camera.matrixAutoUpdate = false
-            this.camera.matrixWorldInverse.fromArray(camera.viewMatrix)
-            this.camera.matrixWorld.getInverse(this.camera.matrixWorldInverse)
+            if (!clsWorldMatrix) {
+                this.camera.matrixWorldInverse.fromArray(camera.viewMatrix)
+                this.camera.matrixWorld.getInverse(this.camera.matrixWorldInverse)
+            } else {
+                this.camera.matrixWorld.fromArray(clsWorldMatrix);
+                this.camera.matrixWorldInverse.getInverse(this.camera.matrixWorld);
+            }
 
             const projectionMatrix = camera.getProjectionMatrix(0.01, 1000)
             this.camera.projectionMatrix.fromArray(projectionMatrix)

@@ -4,7 +4,7 @@ var __DEFINE__ = function(modId, func, req) { var m = { exports: {}, _tempexport
 var __REQUIRE__ = function(modId, source) { if(!__MODS__[modId]) return require(source); if(!__MODS__[modId].status) { var m = __MODS__[modId].m; m._exports = m._tempexports; var desp = Object.getOwnPropertyDescriptor(m, "exports"); if (desp && desp.configurable) Object.defineProperty(m, "exports", { set: function (val) { if(typeof val === "object" && val !== m._exports) { m._exports.__proto__ = val.__proto__; Object.keys(val).forEach(function (k) { m._exports[k] = val[k]; }); } m._tempexports = val }, get: function () { return m._tempexports; } }); __MODS__[modId].status = 1; __MODS__[modId].func(__MODS__[modId].req, m, m.exports); } return __MODS__[modId].m.exports; };
 var __REQUIRE_WILDCARD__ = function(obj) { if(obj && obj.__esModule) { return obj; } else { var newObj = {}; if(obj != null) { for(var k in obj) { if (Object.prototype.hasOwnProperty.call(obj, k)) newObj[k] = obj[k]; } } newObj.default = obj; return newObj; } };
 var __REQUIRE_DEFAULT__ = function(obj) { return obj && obj.__esModule ? obj.default : obj; };
-__DEFINE__(1683552019915, function(require, module, exports) {
+__DEFINE__(1683552020091, function(require, module, exports) {
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => {
@@ -375,6 +375,9 @@ var __publicField = (obj, key, value) => {
       r[14] = a02 * b0 + a12 * b1 + a22 * b2 + a32 * b3;
       r[15] = a03 * b0 + a13 * b1 + a23 * b2 + a33 * b3;
       return this;
+    }
+    mul(rhs) {
+      return this.mul2(this, rhs);
     }
     compose(position, quaternion, scale) {
       const te = this.data;
@@ -1023,6 +1026,8 @@ var __publicField = (obj, key, value) => {
       if (this._isTimeFeature) {
         return this.getTimeFeaturePose(vm);
       }
+      if (typeof vm[0] == "number")
+        vm = new Mat4().set(vm);
       const fusion = this._enable && this.currentFusion ? this.currentFusion : this.localFusion;
       if (!fusion)
         return null;
@@ -1037,6 +1042,8 @@ var __publicField = (obj, key, value) => {
       return this.norm(_pose.data);
     }
     getTimeFeaturePose(vm) {
+      if (typeof vm[0] == "number")
+        vm = new Mat4().set(vm);
       const fusion = this.localFusion;
       if (!fusion)
         return null;
@@ -1353,15 +1360,11 @@ var __publicField = (obj, key, value) => {
         if (cameraImageWithPose.intrinsics) {
           this.cameraParam = JSON.stringify(cameraImageWithPose.intrinsics);
         }
-        console.log("\u8F6C\u6362\u4E3Apost\u8BF7\u6C42\u4E2D\u7684\u6587\u4EF6");
         let data = this.__composeRequestFile(cameraImageWithPose.base64Img, token);
-        console.log("\u53D1\u9001\u8BF7\u6C42");
         return this.__sendClsRequest(data);
       }).then((r) => {
-        console.log("cls\u8BF7\u6C42\u7ED3\u679C", r);
         res = this.__clsResult(r, profile);
       }).catch((e) => {
-        console.log("cls\u8BF7\u6C42\u5931\u8D25", e);
         if (!(e && e.errMsg === "request:fail abort")) {
           res = this.__clsError(e, profile);
         }
@@ -1372,7 +1375,7 @@ var __publicField = (obj, key, value) => {
     }
     __composeRequestFile(image, token) {
       let params = {
-        appId: this.clsdata.clsAppId,
+        appId: this.config.clsAppId,
         cameraParam: this.cameraParam
       };
       if (this.data.debug < 3)
@@ -1408,21 +1411,19 @@ Content-Disposition: form-data;name="${key}"\r
     }
     __sendClsRequest(requestOptions) {
       return new Promise((resolve, reject) => {
-        return new Promise((resolve2, reject2) => {
-          let options = Object.assign({
-            method: "POST",
-            success: (res) => {
-              resolve2(res.data);
-            },
-            fail: (err) => {
-              reject2(err);
-            },
-            complete: () => {
-              this.request = void 0;
-            }
-          }, requestOptions);
-          this.request = wx.request(options);
-        });
+        let options = Object.assign({
+          method: "POST",
+          success: (res) => {
+            resolve(res.data);
+          },
+          fail: (err) => {
+            reject(err);
+          },
+          complete: () => {
+            this.request = void 0;
+          }
+        }, requestOptions);
+        this.request = wx.request(options);
       });
     }
     __clsResult(res, profile) {
@@ -1454,10 +1455,8 @@ Content-Disposition: form-data;name="${key}"\r
         params.worlds = worlds;
         if (this.poseFusion) {
           const arKitPos = Array.from(new Mat4().set(profile.requestCameraPos).clone().transpose().getInverse().data);
-          console.log("\u8BF7\u6C42\u878D\u5408");
           this.poseFusion.insertData(arKitPos, result.pose, profile.requestTime).then((res2) => {
             var _a2;
-            console.log("\u878D\u5408\u7ED3\u679C", res2);
             params.fusionsStatus = res2 == null ? void 0 : res2.status;
             params.fusionPose = res2 == null ? void 0 : res2.fusionPose;
             (_a2 = this.onFound) == null ? void 0 : _a2.call(this, params);
@@ -1466,7 +1465,6 @@ Content-Disposition: form-data;name="${key}"\r
           (_a = this.onFound) == null ? void 0 : _a.call(this, params);
         }
       } else {
-        console.log("\u8BC6\u522B\u5931\u8D25", res);
         (_b = this.onLost) == null ? void 0 : _b.call(this, params);
       }
       return params;
@@ -1505,7 +1503,7 @@ Content-Disposition: form-data;name="${key}"\r
 });
 
 }, function(modId) {var map = {}; return __REQUIRE__(map[modId], modId); })
-return __REQUIRE__(1683552019915);
+return __REQUIRE__(1683552020091);
 })()
 //miniprogram-npm-outsideDeps=["abab","jssha"]
 //# sourceMappingURL=index.js.map

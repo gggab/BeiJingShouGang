@@ -92,7 +92,7 @@ Page({
           const frame = this.vkFrame = session.getVKFrame(canvas.width, canvas.height);
           if (frame) {
             if (this.threeScene) {
-              this.threeScene.render(frame);
+              this.threeScene.render(frame,this.clsClient?.getPoseInMap(frame.camera.viewMatrix));
             }
             this.analysis();
           }
@@ -122,7 +122,6 @@ Page({
 
     // 注入获取图片和矩阵的方法
     this.clsClient.getCameraWithParam = () => {
-      console.log("call getCameraWithParam");
       // timestamp: number,
       // cameraPos?: number[],
       // intrinsics?: number[],
@@ -141,6 +140,10 @@ Page({
         
         const width = this.session.cameraSize.width * this.capturePixelRatio;
         const height = this.session.cameraSize.height * this.capturePixelRatio;
+        if (canvas2d.width != width || canvas2d.height != height) {
+          canvas2d.width = width;
+          canvas2d.height = height;
+        }
         let pixels = frame.getCameraBuffer(width, height);
         if (!this.captureCTX) {
           this.captureCTX = canvas2d.getContext('2d');
@@ -153,13 +156,13 @@ Page({
           let dataurl = canvas2d.toDataURL("image/jpeg", JPEG_QUALITY / 100);
           this.cameraImageWithPose.base64 = dataurl;
           this.cameraImageWithPose.base64Img = dataurl.substr(23);
-          for (let key in this.cameraImageWithPose) {
-            if (key == 'base64' || key == 'base64Img') {
-              console.log(key, this.cameraImageWithPose[key].length);
-              continue;
-            }
-            console.log(key, this.cameraImageWithPose[key]);
-          }
+          // for (let key in this.cameraImageWithPose) {
+          //   if ( key == 'base64Img') {
+          //     console.log(key, this.cameraImageWithPose[key].length);
+          //     continue;
+          //   }
+          //   console.log(key, this.cameraImageWithPose[key]);
+          // }
           resolve(this.cameraImageWithPose);
         });
       });
