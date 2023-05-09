@@ -2,7 +2,7 @@
   position: absolute;
   top: 50%;
   left: 0;
-  z-index: 2;
+  z-index: 1002;
 }
 .btn {
   text-align: center;
@@ -10,4 +10,55 @@
   border-radius: 10rpx;
   background: rgba(255, 255, 255, .6);
   margin: 10rpx;
+}
+.loading {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1001;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; */
+  /* background: black; */
+}
+/* .box{
+  width: 100%;
+  position: relative;
+} */
+.qiu_bg{
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  transform: translateX(-50%);
+  z-index: 1001;
+  height: 38%;
+}
+.qiu_box {
+  width: 100%;
+  height: 25%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top:  15%;
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.qiu{
+  width: 28%;
+}
+.prog{
+  color: #ad0707;
+  font-weight: bold;
+  font-size: 18px;
+}
+.txt{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  bottom: 10%;
+  
 }

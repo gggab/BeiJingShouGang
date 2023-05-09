@@ -9,7 +9,10 @@ Page({
     canvasL: 0,
     // 是否显示左上角的调试信息
     showDebugPanel: false,
-
+    // xlzUrl: "https://ball.forgenius.cn/LQXLZ/LQ00.png",
+    xlz: 0,
+    progress: 0,
+    showLoading: true,
     // // 新园区
     // clsConfig: {
     //   apiKey: "da795ff1828d676dab9aaf9c018fe6eb",
@@ -33,7 +36,7 @@ Page({
     // motion: true,
     // showScan: false,
     load3d: false,
-    
+
     projectUrl: 'https://ball.forgenius.cn/PlayBasketball_0507_3',
     sceneFileName: '1729120.json',
     // projectUrl: 'https://sightp-tour-cdn.sightp.com/wxapp/apps/Test/pdrjy_office_v1',
@@ -46,7 +49,16 @@ Page({
     wx.setKeepScreenOn({
       keepScreenOn: true,
     });
-    this.setData({ load3d: true })
+    this.setData({ load3d: true });
+    let index = 0;
+    setInterval(() => {
+      // let indexStr = index < 10 ? '0' + index : index.toString();
+      // let url = `https://ball.forgenius.cn/LQXLZ/LQ${indexStr}.png`;
+      // this.setData({xlzUrl:url})
+      index++
+      index = index % 31;
+      this.setData({ xlz: index })
+    }, 34);
   },
   pause() {
     this.setData({ running: false });
@@ -109,7 +121,7 @@ Page({
   onClsClientResult(e) {
     if (e.detail.statusCode == 0) {
       // console.log("onClsClientResult", e.detail);
-        // 识别成功
+      // 识别成功
     } else {
       // console.log('当前设备朝向是否适合cls:', this.vkCtx.stableDetector.isSuitForCls);
     }
@@ -121,13 +133,23 @@ Page({
     });
   },
   on3dLoadProgress: function (progress) {
-    // console.log(progress); 
+    // console.log(progress.detail.progress);
+    if (!this.prog) {
+      this.prog = 0;
+    }
+    if (progress.detail.progress) {
+      this.prog = (progress.detail.progress * 100).toFixed(0);
+    }
+    this.setData({
+      progress: this.prog
+    })
   },
   on3dError: function (e) {
     console.error(e);
   },
   on3dLoad: function (arg) {
     console.log('3d Loaded');
+    this.setData({ showLoading: false });
 
     this._pc = arg.detail.pc;
     this._app3d = arg.detail.app;

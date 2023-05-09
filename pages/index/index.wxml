@@ -1,8 +1,11 @@
 <view class="container">
-  <image class="background" src="true.jpg"></image>
+  <image class="background" mode="aspectFill" src="https://ball.forgenius.cn/image/T1_beijing.jpg"></image>
+  <image class="background background2" mode="aspectFit" src="https://ball.forgenius.cn/image/T1_beijingdiejia1.png"></image>
+  <image class="background background3" mode="aspectFit" src="https://ball.forgenius.cn/image/T1_beijingdiejia2.png"></image>
   <view class="welcome">
   <!-- <text class="title">欢迎来到耐克</text> -->
   <br />
 </view>
-  <button class="enter" bindtap="bindViewTap">进入AR开场秀</button>
+  <!-- <image class="enter" bindtap="bindViewTap" src="https://ball.forgenius.cn/image/T1_button.png"></image> -->
+  <button class="enter" bindtap="bindViewTap" style="width: 480rpx;height: 96rpx;"></button>
 </view>
