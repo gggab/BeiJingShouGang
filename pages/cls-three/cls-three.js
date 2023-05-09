@@ -27,8 +27,14 @@ Page({
     width: 1,
     height: 1,
     fps: 0,
+    isRecorder: false,
+    frame: 150
   },
-
+  bindViewTap() {
+    this.setData({
+      isRecorder: true
+    })
+  },
   /**
    * 生命周期函数--监听页面加载
    */
@@ -46,7 +52,8 @@ Page({
         this.initCLS();
 
         if (this.threeScene) {
-          this.threeScene.loadModel('https://dldir1.qq.com/weixin/miniprogram/space_27f8c621878e44d8b05916163ce83b40.glb');
+          // this.threeScene.loadModel('https://dldir1.qq.com/weixin/miniprogram/RobotExpressive_aa2603d917384b68bb4a086f32dabe83.glb');
+          this.threeScene.loadModel('https://ball.forgenius.cn/models/bear2.glb');
         }
       })
   },
@@ -82,24 +89,62 @@ Page({
       const info = wx.getSystemInfoSync()
       calcSize(info.windowWidth, info.windowHeight)
     })
-
+    const that = this;
     return new Promise((resolve, reject) => {
       session.start(err => {
         if (err) return console.error('VK error', err);
-        const canvas = this.canvas;
+        const canvas = that.canvas;
 
         const onFrame = async timestamp => {
-          const frame = this.vkFrame = session.getVKFrame(canvas.width, canvas.height);
+          const frame = that.vkFrame = session.getVKFrame(canvas.width, canvas.height);
           if (frame) {
-            if (this.threeScene) {
-              this.threeScene.render(frame,this.clsClient?.getPoseInMap(frame.camera.viewMatrix));
+            if (that.threeScene) {
+              that.threeScene.render(frame,that.clsClient?.getPoseInMap(frame.camera.viewMatrix));
             }
-            this.analysis();
+            that.analysis();
+          }
+
+          if (that.data.isRecorder) {
+            if (!that.recorder) {
+              that.recorder = wx.createMediaRecorder(canvas, {
+                videoBitsPerSecond: 3000,
+              })
+              await new Promise(resolve => {
+                that.recorder.on('start', resolve);
+                that.recorder.start();
+              });
+            }
+            await new Promise(resolve => that.recorder.requestFrame(resolve));
+            that.data.frame--;
+
+            if (that.data.frame <= 0) {
+              const { tempFilePath } = await new Promise(resolve => {
+                that.recorder.on('stop', resolve)
+                that.recorder.stop()
+              })
+              console.log(tempFilePath);
+              wx.saveVideoToPhotosAlbum({
+                filePath: tempFilePath,
+                success(res) {
+                  console.log('保存成功');
+
+                },
+                fail(res) {
+                  console.log('保存失败', res);
+                }
+              });
+
+              that.recorder.destroy();
+              that.recorder = null;
+              that.setData({
+                isRecorder: false
+              })
+            }
           }
           session.requestAnimationFrame(onFrame)
         }
         session.requestAnimationFrame(onFrame)
-        this.threeScene = new threeScene(canvas);
+        that.threeScene = new threeScene(canvas);
         resolve();
       })
     })
