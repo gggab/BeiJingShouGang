@@ -30,11 +30,15 @@ export class threeScene {
         renderer.gammaOutput = true
         renderer.gammaFactor = 2.2
         // renderer.setDepthTest(true);
+        renderer.autoClearColor = false
+        renderer.state.setCullFace(THREE.CullFaceNone)
 
         this.clock = new THREE.Clock();
 
         this.yuvBehavior = new yuvBehavior(renderer);
         this.yuvBehavior.initGL();
+
+        this.setProjectOnce = true;
     }
     get camera() {
         return this._camera;
@@ -43,9 +47,6 @@ export class threeScene {
         this.yuvBehavior.renderGL(frame);
 
         const camera = frame.camera;
-
-        // 更新动画
-        this.updateAnimation();
 
         // 相机
         if (camera) {
@@ -57,15 +58,19 @@ export class threeScene {
                 this.camera.matrixWorld.fromArray(clsWorldMatrix);
                 this.camera.matrixWorldInverse.getInverse(this.camera.matrixWorld);
             }
-
             const projectionMatrix = camera.getProjectionMatrix(0.01, 1000)
             this.camera.projectionMatrix.fromArray(projectionMatrix)
             this.camera.projectionMatrixInverse.getInverse(this.camera.projectionMatrix)
+            // this.setProjectOnce = false;
+            // if (this.setProjectOnce) {
+            //     console.log(this.camera.projectionMatrix);
+            // }
         }
-
-        this.renderer.autoClearColor = false
+        // 更新动画
+        this.updateAnimation();
+        
         this.renderer.render(this.scene, this.camera)
-        this.renderer.state.setCullFace(this.THREE.CullFaceNone)
+        
     }
     setProjectionMatrix(matrix) {
         // this._camera.projectionMatrix.fromArray(matrix);
