@@ -17,6 +17,9 @@ const clsConfig = {
   interval: 3000
 }
 const JPEG_QUALITY = 70;
+const MaxVideoRecoderFrame = 150;
+// const app = getApp()
+// console.log(app)
 // pages/cls-three/cls-three.js
 Page({
 
@@ -28,18 +31,33 @@ Page({
     height: 1,
     fps: 0,
     isRecorder: false,
-    frame: 150
+    frame: MaxVideoRecoderFrame,
+    showLoading: true,
+    progress: 3,
+    // height: app.globalData.height ,
+    recorded: false,
   },
-  bindViewTap() {
+  startRecoder() {
     this.setData({
       isRecorder: true
     })
+  },
+  bindBack() {
+    wx.navigateBack()
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-
+    wx.setKeepScreenOn({
+      keepScreenOn: true,
+    });
+    let index = 0;
+    setInterval(() => {
+      index++
+      index = index % 31;
+      this.setData({ xlz: index })
+    }, 34);
   },
 
   onReady() {
@@ -48,15 +66,51 @@ Page({
       .node()
       .exec(async res => {
         this.canvas = res[0].node
-        await this.initVK();
+        if (wx.getSystemInfoSync().platform == "devtools") {
+          this.threeScene = new threeScene(this.canvas);
+        } else {
+          await this.initVK();
+        }
         this.initCLS();
 
         if (this.threeScene) {
+          let assetsLoaderPromises = [];
+          let assets = [
+            'https://ball.forgenius.cn/models/eagle.glb',
+            'https://ball.forgenius.cn/models/tianma.glb',
+            // 'https://ball.forgenius.cn/models/bear.glb',
+            // 'https://ball.forgenius.cn/models/wolf.glb',
+          ]
+          assets.forEach((url) => {
+            assetsLoaderPromises.push(this.threeScene.loadModel(url));
+          });
+          // 加载太快了，看不到进度，这里等5秒方便测试
+          // assetsLoaderPromises.push(new Promise((resolve,reject)=>{
+          //   setTimeout(() => {
+          //     resolve();
+          //   }, 5000);
+          // }))
+          console.log("start load assets");
+          // 进度是假的
+          let intervalId = setInterval(() => {
+            // console.log(this.data.progress)
+            if (this.data.progress < 94) {
+              this.setData({ progress: this.data.progress + 5 });
+            }
+          }, 34);
+          await Promise.all(assetsLoaderPromises);
+          // 加载完成后，清除进度更新
+          clearInterval(intervalId);
+          this.setData({ progress: 100 });
+          // 延迟1ms，隐藏进度条
+          setTimeout(() => {
+            this.setData({ showLoading: false });
+          }, 1);
           // this.threeScene.loadModel('https://dldir1.qq.com/weixin/miniprogram/RobotExpressive_aa2603d917384b68bb4a086f32dabe83.glb');
-          // this.threeScene.loadModel('https://ball.forgenius.cn/models/wolf.glb');
-          this.threeScene.loadModel('https://ball.forgenius.cn/models/eagle.glb');
-          // this.threeScene.loadModel('https://ball.forgenius.cn/models/bear.glb');
-          this.threeScene.loadModel('https://ball.forgenius.cn/models/tianma.glb');
+          // let loadWolf = this.threeScene.loadModel('https://ball.forgenius.cn/models/wolf.glb');
+          // this.threeScene.loadModel('https://ball.forgenius.cn/models/eagle.glb');
+          //  this.threeScene.loadModel('https://ball.forgenius.cn/models/bear.glb');
+          // this.threeScene.loadModel('https://ball.forgenius.cn/models/tianma.glb');
         }
       })
   },
@@ -102,7 +156,7 @@ Page({
           const frame = that.vkFrame = session.getVKFrame(canvas.width, canvas.height);
           if (frame) {
             if (that.threeScene) {
-              that.threeScene.render(frame,that.clsClient?.getPoseInMap(frame.camera.viewMatrix));
+              that.threeScene.render(frame, that.clsClient?.getPoseInMap(frame.camera.viewMatrix));
             }
             that.analysis();
           }
@@ -125,22 +179,14 @@ Page({
                 that.recorder.on('stop', resolve)
                 that.recorder.stop()
               })
+              this.videotempFilePath = tempFilePath;
               console.log(tempFilePath);
-              wx.saveVideoToPhotosAlbum({
-                filePath: tempFilePath,
-                success(res) {
-                  console.log('保存成功');
-
-                },
-                fail(res) {
-                  console.log('保存失败', res);
-                }
-              });
-
               that.recorder.destroy();
               that.recorder = null;
               that.setData({
-                isRecorder: false
+                frame: MaxVideoRecoderFrame,
+                isRecorder: false,
+                recorded: true,
               })
             }
           }
@@ -152,6 +198,42 @@ Page({
       })
     })
   },
+  async stopRecoder() {
+    const that = this;
+    const { tempFilePath } = await new Promise(resolve => {
+      that.recorder.on('stop', resolve)
+      that.recorder.stop()
+    })
+    this.videotempFilePath = tempFilePath;
+    console.log(tempFilePath);
+    that.recorder.destroy();
+    that.recorder = null;
+    that.setData({
+      frame: MaxVideoRecoderFrame,
+      isRecorder: false,
+      recorded: true,
+    });
+  },
+  saveVideoToPhotosAlbum() {
+    wx.saveVideoToPhotosAlbum({
+      filePath: this.videotempFilePath,
+      success: (res) => {
+        console.log('保存成功');
+        this.videotempFilePath = '';
+        this.setData({
+          recorded: false,
+        });
+      },
+      fail: (res) => {
+        console.log('保存失败', res);
+      }
+    });
+  },
+  closeSaveVideo() {
+    this.setData({
+      recorded: false,
+    });
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -159,7 +241,7 @@ Page({
     // 穿件离屏截图 canvas
     this.captureCanvas = wx.createOffscreenCanvas({ type: '2d', width: 0, height: 0 });
 
-    this.capturePixelRatio = 480 / this.session.cameraSize.width
+    this.capturePixelRatio = 480 / this.session?.cameraSize.width
 
     // NEED
     // this.vkFrame
@@ -176,6 +258,10 @@ Page({
       // base64?: string,
       // base64Img: string// 去除头部 base64.substr(23);
       return new Promise((resolve, reject) => {
+        if (!this.session) {
+          reject(null);
+          return;
+        }
         const frame = this.vkFrame;
         this.cameraImageWithPose = {};
         this.cameraImageWithPose.timestamp = new Date().getTime();
@@ -185,7 +271,7 @@ Page({
           this.cameraImageWithPose.intrinsics = [intrinsics[0] * this.capturePixelRatio, intrinsics[4] * this.capturePixelRatio, intrinsics[7] * this.capturePixelRatio, intrinsics[6] * this.capturePixelRatio];
 
         const canvas2d = this.captureCanvas;
-        
+
         const width = this.session.cameraSize.width * this.capturePixelRatio;
         const height = this.session.cameraSize.height * this.capturePixelRatio;
         if (canvas2d.width != width || canvas2d.height != height) {
