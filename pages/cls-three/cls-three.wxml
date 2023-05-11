@@ -1,6 +1,7 @@
 <!--pages/cls-three/cls-three.wxml-->
 <canvas type="webgl" id="webgl" style="width: {{width}}px; height: {{height}}px" bindtouchend="onTouchEnd">
-  <cover-view class="info fps">fps: {{fps}}</cover-view>
+  <!-- <cover-view class="info fps">fps: {{fps}}</cover-view> -->
+    <!-- <cover-view class="info fps">录制倒计时: {{frame}}</cover-view> -->
 </canvas>
 <view class="loading" wx:if="{{showLoading}}">
   <image class="qiu_bg" src="https://ball.forgenius.cn/image/T3_beijingdiejia2.png" mode="aspectFit" />

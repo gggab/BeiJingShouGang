@@ -17,7 +17,7 @@ const clsConfig = {
   interval: 3000
 }
 const JPEG_QUALITY = 70;
-const MaxVideoRecoderFrame = 150;
+const MaxVideoRecoderFrame = 30;
 // const app = getApp()
 // console.log(app)
 // pages/cls-three/cls-three.js
@@ -147,12 +147,20 @@ Page({
       calcSize(info.windowWidth, info.windowHeight)
     })
     const that = this;
-    return new Promise((resolve, reject) => {
-      session.start(err => {
+    return new Promise(async (resolve, reject) => {
+      session.start(async err => {
         if (err) return console.error('VK error', err);
         const canvas = that.canvas;
 
         const onFrame = async timestamp => {
+          if (!that.timestamp) {
+            that.timestamp = timestamp;
+            that.datiletime = 0;
+          }
+          that.detailTime = (timestamp - that.timestamp) / 1000;
+          that.datiletime += that.detailTime;
+          that.timestamp = timestamp;
+          // console.log(that.datiletime);
           const frame = that.vkFrame = session.getVKFrame(canvas.width, canvas.height);
           if (frame) {
             if (that.threeScene) {
@@ -161,10 +169,12 @@ Page({
             that.analysis();
           }
 
-          if (that.data.isRecorder) {
+          if (that.data.isRecorder && that.datiletime > 0.0416) {
             if (!that.recorder) {
               that.recorder = wx.createMediaRecorder(canvas, {
-                videoBitsPerSecond: 3000,
+                duration: 30 * 1000,
+                videoBitsPerSecond: 1000,
+                fps: 24
               })
               await new Promise(resolve => {
                 that.recorder.on('start', resolve);
@@ -172,15 +182,28 @@ Page({
               });
             }
             await new Promise(resolve => that.recorder.requestFrame(resolve));
-            that.data.frame--;
+            let _frame = that.data.frame - 0.0416;
+            that.setData({
+              frame: _frame
+            })
 
-            if (that.data.frame <= 0) {
+            if (that.data.frame <= 0 || !that.data.isRecorder) {
               const { tempFilePath } = await new Promise(resolve => {
                 that.recorder.on('stop', resolve)
                 that.recorder.stop()
               })
               this.videotempFilePath = tempFilePath;
               console.log(tempFilePath);
+              wx.saveVideoToPhotosAlbum({
+                filePath: tempFilePath,
+                success(res) {
+                  console.log('保存成功');
+                },
+                fail(res) {
+                  console.log('保存失败', res);
+                }
+              });
+
               that.recorder.destroy();
               that.recorder = null;
               that.setData({
@@ -189,6 +212,9 @@ Page({
                 recorded: true,
               })
             }
+          }
+          if (that.datiletime > 0.0416) {
+            that.datiletime -= 0.0416;
           }
           session.requestAnimationFrame(onFrame)
         }
