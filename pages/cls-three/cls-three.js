@@ -76,9 +76,10 @@ Page({
         if (this.threeScene) {
           let assetsLoaderPromises = [];
           let assets = [
-            'https://ball.forgenius.cn/models/eagle.glb',
-            'https://ball.forgenius.cn/models/tianma.glb',
-            // 'https://ball.forgenius.cn/models/bear.glb',
+            // 'https://ball.forgenius.cn/models/eagle.glb',
+            // 'https://ball.forgenius.cn/models/tianma.glb',
+            'https://ball.forgenius.cn/models/long.glb',
+            'https://ball.forgenius.cn/models/bear.glb',
             // 'https://ball.forgenius.cn/models/wolf.glb',
           ]
           assets.forEach((url) => {
@@ -106,11 +107,6 @@ Page({
           setTimeout(() => {
             this.setData({ showLoading: false });
           }, 1);
-          // this.threeScene.loadModel('https://dldir1.qq.com/weixin/miniprogram/RobotExpressive_aa2603d917384b68bb4a086f32dabe83.glb');
-          // let loadWolf = this.threeScene.loadModel('https://ball.forgenius.cn/models/wolf.glb');
-          // this.threeScene.loadModel('https://ball.forgenius.cn/models/eagle.glb');
-          //  this.threeScene.loadModel('https://ball.forgenius.cn/models/bear.glb');
-          // this.threeScene.loadModel('https://ball.forgenius.cn/models/tianma.glb');
         }
       })
   },
