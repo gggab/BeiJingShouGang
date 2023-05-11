@@ -53,7 +53,10 @@ Page({
 
         if (this.threeScene) {
           // this.threeScene.loadModel('https://dldir1.qq.com/weixin/miniprogram/RobotExpressive_aa2603d917384b68bb4a086f32dabe83.glb');
-          this.threeScene.loadModel('https://ball.forgenius.cn/models/bear2.glb');
+          // this.threeScene.loadModel('https://ball.forgenius.cn/models/wolf.glb');
+          // this.threeScene.loadModel('https://ball.forgenius.cn/models/eagle.glb');
+          this.threeScene.loadModel('https://ball.forgenius.cn/models/bear.glb');
+          this.threeScene.loadModel('https://ball.forgenius.cn/models/tianma.glb');
         }
       })
   },
