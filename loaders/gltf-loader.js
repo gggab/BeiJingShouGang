@@ -1011,14 +1011,13 @@ export function registerGLTFLoader(THREE) {
       var sourceURI = source.uri;
       var isObjectURL = false;
       if (source.bufferView !== undefined) {
-        sourceURI = parser.getDependency('bufferView', source.bufferView).then(function(bufferView) {
-          isObjectURL = true;
-          var blob = new global.Blob([bufferView], {
-            type: source.mimeType
+        sourceURI = parser
+          .getDependency("bufferView", source.bufferView)
+          .then(function (bufferView) {
+            return `data:${
+              source.mimeType
+            };base64,${wx.arrayBufferToBase64(bufferView)}`;
           });
-          sourceURI = URL.createObjectURL(blob);
-          return sourceURI
-        })
       }
       return Promise.resolve(sourceURI).then(function(sourceURI) {
         var loader = THREE.Loader.Handlers.get(sourceURI);
