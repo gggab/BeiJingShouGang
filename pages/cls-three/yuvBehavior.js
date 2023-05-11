@@ -31,8 +31,8 @@ export class yuvBehavior {
         uniform mat3 displayTransform;
         varying vec2 v_texCoord;
         void main() {
-          vec3 p = displayTransform * vec3(a_position, 0);
-          gl_Position = vec4(p, 1);
+          vec3 p = displayTransform * vec3(a_position, 0.0);
+          gl_Position = vec4(p, 1.0);
           v_texCoord = a_texCoord;
         }
       `
@@ -137,12 +137,23 @@ export class yuvBehavior {
             const bindingTexture6 = gl.getParameter(gl.TEXTURE_BINDING_2D)
             gl.bindTexture(gl.TEXTURE_2D, uvTexture)
 
+            // 关闭深度缓冲区
+            gl.disable(gl.DEPTH_TEST);
+
+            // 关闭深度写入
+            gl.depthMask(false);
+
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
 
             gl.bindTexture(gl.TEXTURE_2D, bindingTexture6)
             gl.activeTexture(gl.TEXTURE0 + 5)
             gl.bindTexture(gl.TEXTURE_2D, bindingTexture5)
+            // 启用深度缓冲区
+            gl.enable(gl.DEPTH_TEST);
 
+            // 设置深度比较和更新方式
+            gl.depthFunc(gl.LEQUAL);
+            gl.depthMask(true);
             gl.useProgram(currentProgram)
             gl.activeTexture(currentActiveTexture)
             this._vao_ext.bindVertexArrayOES(currentVAO)
