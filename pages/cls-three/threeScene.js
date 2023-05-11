@@ -1,6 +1,5 @@
 import { createScopedThreejs } from 'threejs-miniprogram'
 import { registerGLTFLoader } from '../../loaders/gltf-loader'
-import cloneGltf from '../../loaders/gltf-clone'
 import { yuvBehavior } from './yuvBehavior';
 export class threeScene {
     constructor(canvas) {
@@ -39,6 +38,8 @@ export class threeScene {
         this.yuvBehavior.initGL();
 
         this.setProjectOnce = true;
+        this.models = [];
+        this.animations = [];
     }
     get camera() {
         return this._camera;
@@ -82,21 +83,15 @@ export class threeScene {
     async loadModel(url) {
         const loader = new this.THREE.GLTFLoader();
         loader.load(url, gltf => {
-            this.model = {
-                scene: gltf.scene,
-                animations: gltf.animations
-            }
-            const {scene, animations} = cloneGltf(this.model, this.THREE)
+            const scene = gltf.scene;
+            const animations = gltf.animations;
             const mixer = new this.THREE.AnimationMixer(scene);
             for (let i = 0; i < animations.length; i++) {
                 const clip = animations[i]
                 console.log(clip.name);
-                // if (clip.name === 'Dance') {
-                //     const action = mixer.clipAction(clip)
-                //     action.play()
-                // }
             }
             if (animations.length >= 1) {
+                this.animations.push(clip);
                 const clip = animations[0];
                 const action = mixer.clipAction(clip);
                 action.play();
@@ -104,15 +99,8 @@ export class threeScene {
             scene._mixer = mixer;
             this.mixers = this.mixers || [];
             this.mixers.push(mixer);
-
-            const model = new this.THREE.Object3D()
-            model.add(scene)
-            this.scene.add(model);
-            // const model = this.model = gltf.scene
-            // model.matrixAutoUpdate = false
-            // model.position.set(0, 0, -0.5)
-            // model.scale.set(0.01, 0.01, 0.01)
-            // this.scene.add(model)
+            this.models.push(scene);
+            this.scene.add(scene);
         })
     }
     updateAnimation() {
