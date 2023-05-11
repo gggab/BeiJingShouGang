@@ -13,12 +13,17 @@ export class threeScene {
         const scene = this.scene = new THREE.Scene()
 
         // 光源
-        const light1 = new THREE.HemisphereLight(0xffffff, 0x444444) // 半球光
-        light1.position.set(0, 0.2, 0)
-        scene.add(light1)
-        const light2 = new THREE.DirectionalLight(0xffffff) // 平行光
-        light2.position.set(0, 0.2, 0.1)
-        scene.add(light2)
+        // const light1 = new THREE.HemisphereLight(0xffffff, 0x444444) // 半球光
+        // light1.position.set(0, 0.2, 0)
+        // scene.add(light1)
+        // const light2 = new THREE.DirectionalLight(0xffffff) // 平行光
+        // light2.position.set(0, 0.2, 0.1)
+        // scene.add(light2)
+        // 创建环境光源
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+
+        // 添加到场景中
+        scene.add(ambientLight);
 
         // 渲染层
         const renderer = this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
@@ -81,12 +86,12 @@ export class threeScene {
             for (let i = 0; i < animations.length; i++) {
                 const clip = animations[i]
                 console.log(clip.name);
-                if (clip.name === 'Dance') {
-                    const action = mixer.clipAction(clip)
-                    action.play()
-                }
+                // if (clip.name === 'Dance') {
+                //     const action = mixer.clipAction(clip)
+                //     action.play()
+                // }
             }
-            if (animations.length === 1) {
+            if (animations.length >= 1) {
                 const clip = animations[0];
                 const action = mixer.clipAction(clip);
                 action.play();
