@@ -40,6 +40,7 @@ export class threeScene {
         this.setProjectOnce = true;
         this.models = [];
         this.animations = [];
+        this.playing = false;
     }
     get camera() {
         return this._camera;
@@ -56,8 +57,10 @@ export class threeScene {
                 this.camera.matrixWorldInverse.fromArray(camera.viewMatrix)
                 this.camera.matrixWorld.getInverse(this.camera.matrixWorldInverse)
             } else {
+                // console.log('云识别到了')
                 this.camera.matrixWorld.fromArray(clsWorldMatrix);
                 this.camera.matrixWorldInverse.getInverse(this.camera.matrixWorld);
+                this.play();
             }
             const projectionMatrix = camera.getProjectionMatrix(0.01, 1000)
             this.camera.projectionMatrix.fromArray(projectionMatrix)
@@ -67,8 +70,10 @@ export class threeScene {
             //     console.log(this.camera.projectionMatrix);
             // }
         }
-        // 更新动画
-        this.updateAnimation();
+        if (this.playing) {
+            // 更新动画
+            this.updateAnimation();
+        }
         
         this.renderer.render(this.scene, this.camera)
         
@@ -78,6 +83,18 @@ export class threeScene {
     }
     setWorldMatrix(matrix) {
         // this._camera.matrixWorld.fromArray(matrix);
+    }
+    play() {
+        if (this.playing) {
+            return;
+        }
+        this.playing = true;
+        this.models.forEach(model => {
+            this.scene.add(model);
+        })
+        this.animations.forEach(element => {
+            element.play();
+        });
     }
     // 加载一个gltf模型
     async loadModel(url) {
@@ -91,16 +108,16 @@ export class threeScene {
                 console.log(clip.name);
             }
             if (animations.length >= 1) {
-                this.animations.push(clip);
                 const clip = animations[0];
                 const action = mixer.clipAction(clip);
-                action.play();
+                // action.play();
+                this.animations.push(action);
             }
             scene._mixer = mixer;
             this.mixers = this.mixers || [];
             this.mixers.push(mixer);
             this.models.push(scene);
-            this.scene.add(scene);
+            // this.scene.add(scene);
         })
     }
     updateAnimation() {
