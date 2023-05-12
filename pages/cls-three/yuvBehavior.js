@@ -150,7 +150,8 @@ export class yuvBehavior {
             gl.bindTexture(gl.TEXTURE_2D, bindingTexture5)
             // 启用深度缓冲区
             gl.enable(gl.DEPTH_TEST);
-
+            gl.clearDepth(1.0);
+            gl.clear(gl.DEPTH_BUFFER_BIT);
             // 设置深度比较和更新方式
             gl.depthFunc(gl.LEQUAL);
             gl.depthMask(true);
