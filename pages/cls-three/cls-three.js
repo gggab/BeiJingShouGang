@@ -168,7 +168,11 @@ Page({
           const frame = that.vkFrame = session.getVKFrame(canvas.width, canvas.height);
           if (frame) {
             if (that.threeScene) {
-              that.threeScene.render(frame, that.clsClient?.getPoseInMap(frame.camera.viewMatrix));
+              const clsWorldMatrix = that.clsClient?.getPoseInMap(frame.camera.viewMatrix);
+              if(clsWorldMatrix){
+                that.playAudio();
+              }
+              that.threeScene.render(frame, clsWorldMatrix);
             }
             that.analysis();
           }
@@ -229,6 +233,24 @@ Page({
         resolve();
       })
     })
+  },
+  playAudio() {
+    if (this.isAudioPlaying) return;
+    this.isAudioPlaying = true;
+
+    const innerAudioContext = wx.createInnerAudioContext({
+      useWebAudioImplement: false // 是否使用 WebAudio 作为底层音频驱动，默认关闭。对于短音频、播放频繁的音频建议开启此选项，开启后将获得更优的性能表现。由于开启此选项后也会带来一定的内存增长，因此对于长音频建议关闭此选项
+    })
+    innerAudioContext.src = 'https://ball.forgenius.cn/2079_forest-ambience.mp3'
+    innerAudioContext.play() // 播放
+
+    const innerAudioContext2 = wx.createInnerAudioContext({
+      useWebAudioImplement: false // 是否使用 WebAudio 作为底层音频驱动，默认关闭。对于短音频、播放频繁的音频建议开启此选项，开启后将获得更优的性能表现。由于开启此选项后也会带来一定的内存增长，因此对于长音频建议关闭此选项
+    })
+    innerAudioContext2.src = 'https://ball.forgenius.cn/1822_crowd-chatter.mp3'
+    innerAudioContext2.play() // 播放
+
+    this.audios = [innerAudioContext, innerAudioContext2];
   },
   async stopRecoder() {
     if (this.videotempFilePath) return;
@@ -369,6 +391,11 @@ Page({
     }
     if (this.clsClient) {
       this.clsClient.stop();
+    }
+    if (this.audios) {
+      this.audios.forEach(audio => {
+        audio.stop()
+      })
     }
   },
 
