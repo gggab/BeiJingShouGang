@@ -110,6 +110,7 @@ export class threeScene {
             if (animations.length >= 1) {
                 const clip = animations[0];
                 const action = mixer.clipAction(clip);
+                action.setLoop(this.THREE.LoopOnce);
                 // action.play();
                 this.animations.push(action);
             }
