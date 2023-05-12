@@ -1,7 +1,7 @@
 <!--pages/cls-three/cls-three.wxml-->
 <canvas type="webgl" id="webgl" style="width: {{width}}px; height: {{height}}px" bindtouchend="onTouchEnd">
   <!-- <cover-view class="info fps">fps: {{fps}}</cover-view> -->
-    <!-- <cover-view class="info fps">录制倒计时: {{frame}}</cover-view> -->
+  <!-- <cover-view class="info fps">录制倒计时: {{frame}}</cover-view> -->
 </canvas>
 <view class="loading" wx:if="{{showLoading}}">
   <image class="qiu_bg" src="https://ball.forgenius.cn/image/T3_beijingdiejia2.png" mode="aspectFit" />
@@ -39,25 +39,30 @@
     <image wx:if="{{xlz==30}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ30.png" mode="aspectFit" />
     <view class="prog">{{progress}}%</view>
   </view>
-  <!-- </view> -->
+  <!-- <view class="qiu_box">
+    <css-animation class="qiu" width="210" height="210" count="11" duration="1" url="https://ball.forgenius.cn/image/lq.png"></css-animation>
+    <view class="prog">{{progress}}%</view>
+  </view> -->
   <image class="txt" src="https://ball.forgenius.cn/image/T3_Text.png" mode="aspectFit" />
 </view>
 <view class="scan" wx:if="{{showScan && !showLoading}}">
   <view class="bylift_content">
     <view class="scan_title">开始观赛前先定位</view>
     <view class="erect_img">
-      <css-animation width="578" height="358" count="60" duration="2" url="https://sightppp.oss-cn-shanghai.aliyuncs.com/projects/ARNav/css_sprites3.png"></css-animation>
+      <css-animation width="578" height="358" count="60" duration="2" url="https://ball.forgenius.cn/image/css_sprites3.png"></css-animation>
     </view>
     <view class="erect_tip">
-      <view wx:if="{{!firstLocalized}}">请竖起手机缓慢扫描空间</view>
+      <!-- <view wx:if="{{!firstLocalized}}">请竖起手机缓慢扫描空间</view>
       <view wx:if="{{!firstLocalized}}">对准更容易识别哦~</view>
-      <view wx:if="{{firstLocalized}}">定位成功~</view>
+      <view wx:if="{{firstLocalized}}">定位成功~</view> -->
+      <image wx:if="{{!firstLocalized}}" src="https://ball.forgenius.cn/image/T_DD_ZI_QSQSJ.png" mode="aspectFit" style="width: 500rpx;height: 100rpx;" />
+      <image wx:if="{{firstLocalized}}" src="https://ball.forgenius.cn/image/T_DD_ZI_DWCG.png" mode="aspectFit" style="width: 200rpx;height: 100rpx;" />
     </view>
   </view>
 </view>
-<image class="lp_bg" wx:if="{{!showLoading}}" src="https://ball.forgenius.cn/image/T4_beijingdiejia1.png" mode="aspectFill"/>
+<image class="lp_bg" wx:if="{{!showLoading}}" src="https://ball.forgenius.cn/image/T4_beijingdiejia1.png" mode="aspectFill" />
 <view class="back_btn" bindtap="bindBack">
-  <image src="https://ball.forgenius.cn/image/T3_button_FH.png" mode="aspectFit"/>
+  <image src="https://ball.forgenius.cn/image/T3_button_FH.png" mode="aspectFit" />
 </view>
 <!-- <view class="enter lp_btn" wx:if="{{!showLoading && !isRecorder}}" bindtap="startRecoder">
   <image src="https://ball.forgenius.cn/image/T4_button.png" style="filter: sepia(100%);" mode="aspectFit"/>
@@ -65,18 +70,23 @@
 <view class="enter lp_btn" wx:if="{{!showLoading && isRecorder}}" bindtap="stopRecoder">
   <image src="https://ball.forgenius.cn/image/T4_button.png" style="filter: sepia(100%);" mode="aspectFit"/>
 </view> -->
-<view class="enter lp_btn" wx:if="{{!showLoading && !isRecorder}}" bindtap="startRecoder">
-  <image src="./icons/record_on.png" style="filter: sepia(100%);" mode="aspectFit"/>
+<view class="enter lp_btn" wx:if="{{!showLoading &&firstLocalized && !isRecorder}}" bindtap="startRecoder">
+  <image src="https://ball.forgenius.cn/image/record_on.png" style="filter: sepia(100%);" mode="aspectFit" />
 </view>
-<view class="enter lp_btn" wx:if="{{!showLoading && isRecorder}}" bindtap="stopRecoder">
-  <image src="./icons/record_off.png" style="filter: sepia(100%);" mode="aspectFit"/>
+<view class="enter lp_btn" wx:if="{{!showLoading&&firstLocalized && isRecorder}}" bindtap="stopRecoder">
+  <image src="https://ball.forgenius.cn/image/record_off.png" style="filter: sepia(100%);" mode="aspectFit" />
 </view>
 <!-- 弹窗 -->
 <view wx:if="{{recorded}}" style="position: fixed;width: 100vw;height: 100vh;z-index: 2023;top:0;left:0;background: rgba(0,0,0,0.5);"></view>
 <view wx:if="{{recorded}}" class="tc enter">
   <view style="position: relative;">
-    <image src="https://ball.forgenius.cn/image/T5_beijingdiejia1.png" mode="aspectFit"/>
-    <image bindtap="saveVideoToPhotosAlbum" src="https://ball.forgenius.cn/image/T5_button_qd.png" style="position: absolute;left:50%;margin-left: -140rpx;top:60%;height: 100rpx; width: 280rpx;" mode="aspectFit"/>
+    <image src="https://ball.forgenius.cn/image/T5_beijingdiejia1.png" mode="aspectFit" />
+    <image bindtap="saveVideoToPhotosAlbum" src="https://ball.forgenius.cn/image/T5_button_qd.png" style="position: absolute;left:50%;margin-left: -140rpx;top:60%;height: 100rpx; width: 280rpx;" mode="aspectFit" />
   </view>
-  <image bindtap="closeSaveVideo" src="https://ball.forgenius.cn/image/T5_button_GB.png" mode="aspectFit" style="width: 80rpx;height: 80rpx; margin-top: 10px;"/>
+  <image bindtap="closeSaveVideo" src="https://ball.forgenius.cn/image/T5_button_GB.png" mode="aspectFit" style="width: 80rpx;height: 80rpx; margin-top: 10px;" />
 </view>
+<block class="final" wx:if="{{showFinal}}">
+  <image class="full" mode="aspectFill" src="https://ball.forgenius.cn/image/T1_beijing.jpg"></image>
+  <image class="full" mode="aspectFit" src="https://ball.forgenius.cn/image/T1_beijingdiejia1.png"></image>
+  <image class="full" mode="aspectFit" src="https://ball.forgenius.cn/image/T_BJ_3.png"></image>
+</block>

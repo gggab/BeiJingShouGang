@@ -3,6 +3,6 @@
   "projectname": "BeiJingShouGang",
   "setting": {
     "compileHotReLoad": true,
-    "urlCheck": false
+    "urlCheck": true
   }
 }

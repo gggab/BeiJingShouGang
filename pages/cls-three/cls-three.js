@@ -37,7 +37,8 @@ Page({
     // height: app.globalData.height ,
     recorded: false,
     showScan: true,
-    firstLocalized: false
+    firstLocalized: false,
+    showFinal: false
   },
   startRecoder() {
     this.setData({
@@ -192,15 +193,17 @@ Page({
               })
               this.videotempFilePath = tempFilePath;
               console.log(tempFilePath);
-              wx.saveVideoToPhotosAlbum({
-                filePath: tempFilePath,
-                success(res) {
-                  console.log('保存成功');
-                },
-                fail(res) {
-                  console.log('保存失败', res);
-                }
-              });
+              
+              // 这里不写入相册，需要用户手动点击
+              // wx.saveVideoToPhotosAlbum({
+              //   filePath: tempFilePath,
+              //   success(res) {
+              //     console.log('保存成功');
+              //   },
+              //   fail(res) {
+              //     console.log('保存失败', res);
+              //   }
+              // });
 
               that.recorder.destroy();
               that.recorder = null;
@@ -223,6 +226,7 @@ Page({
     })
   },
   async stopRecoder() {
+    if (this.videotempFilePath) return;
     const that = this;
     const { tempFilePath } = await new Promise(resolve => {
       that.recorder.on('stop', resolve)
@@ -246,6 +250,7 @@ Page({
         this.videotempFilePath = '';
         this.setData({
           recorded: false,
+          showFinal: true
         });
       },
       fail: (res) => {
@@ -413,7 +418,7 @@ Page({
   /**
    * cls 识别失败
    */
-  onClsLose(clsRes) {
+  onClsLost(clsRes) {
     console.log('cls lose', clsRes);
   },
   onClsError(err) {

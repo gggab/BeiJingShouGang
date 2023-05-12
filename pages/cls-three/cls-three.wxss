@@ -5,6 +5,7 @@
   left: 0;
   z-index: 1;
 }
+
 .enter {
   position: fixed;
   left: 50%;
@@ -25,35 +26,41 @@
   background: rgba(255, 255, 255, .6);
   margin: 10rpx;
 }
-.back_btn{
+
+.back_btn {
   position: fixed;
   z-index: 2023;
   background: none;
-  top:45px;
-  left:20rpx;
+  top: 45px;
+  left: 20rpx;
 }
-.back_btn image{
+
+.back_btn image {
   width: 80rpx;
   height: 80rpx;
 }
-.lp_bg{
+
+.lp_bg {
   position: fixed;
   width: 100vw;
   height: 100vh;
   bottom: 0;
-  left:0;
+  left: 0;
   z-index: 2022;
 }
-.lp_btn{
+
+.lp_btn {
   background: none;
   z-index: 2023;
   bottom: 80rpx;
 }
-.lp_btn image{
+
+.lp_btn image {
   width: 150rpx;
   height: 150rpx;
 }
-.tc{
+
+.tc {
   z-index: 2024;
   top: 30%;
   display: flex;
@@ -61,6 +68,7 @@
   justify-content: center;
   align-items: center;
 }
+
 .loading {
   position: fixed;
   width: 100vw;
@@ -116,31 +124,36 @@
   transform: translateX(-50%) scale(0.9);
   bottom: 10%;
 }
-.bylift_content{
+
+.bylift_content {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
 }
-.scan_title{
+
+.scan_title {
   text-align: center;
   color: #fff;
   font-size: 48rpx;
   font-weight: 500;
   margin-bottom: 32rpx;
 }
-.erect_img{
+
+.erect_img {
   width: 578rpx;
   height: 358rpx;
   margin: 0 auto 48rpx;
 }
-.erect_tip{
+
+.erect_tip {
   font-size: 28rpx;
   color: #fff;
   line-height: 56rpx;
   text-align: center;
 }
-.bylift_remind{
+
+.scan {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -148,4 +161,21 @@
   top: 0;
   background-color: rgba(0, 0, 0, 0.2);
   z-index: 130;
+}
+
+.final {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 2000;
+}
+.full {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 3000;
 }
