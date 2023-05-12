@@ -71,10 +71,10 @@
   <image src="https://ball.forgenius.cn/image/T4_button.png" style="filter: sepia(100%);" mode="aspectFit"/>
 </view> -->
 <view class="enter lp_btn" wx:if="{{!showLoading &&firstLocalized && !isRecorder}}" bindtap="startRecoder">
-  <image src="https://ball.forgenius.cn/image/record_on.png" style="filter: sepia(100%);" mode="aspectFit" />
+  <image src="https://ball.forgenius.cn/image/record_on.png" mode="aspectFit" />
 </view>
 <view class="enter lp_btn" wx:if="{{!showLoading&&firstLocalized && isRecorder}}" bindtap="stopRecoder">
-  <image src="https://ball.forgenius.cn/image/record_off.png" style="filter: sepia(100%);" mode="aspectFit" />
+  <image src="https://ball.forgenius.cn/image/record_off.png" mode="aspectFit" />
 </view>
 <!-- 弹窗 -->
 <view wx:if="{{recorded}}" style="position: fixed;width: 100vw;height: 100vh;z-index: 2023;top:0;left:0;background: rgba(0,0,0,0.5);"></view>
