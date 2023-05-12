@@ -81,8 +81,13 @@ Page({
           let assets = [
             // 'https://ball.forgenius.cn/models/eagle.glb',
             // 'https://ball.forgenius.cn/models/tianma.glb',
-            'https://ball.forgenius.cn/models/long.glb',
-            'https://ball.forgenius.cn/models/bear.glb',
+            // 'https://dldir1.qq.com/weixin/miniprogram/RobotExpressive_aa2603d917384b68bb4a086f32dabe83.glb',
+            // 'https://ball.forgenius.cn/models/draco_left.glb',
+            'https://ball.forgenius.cn/models/draco_right.glb',
+            // 'https://ball.forgenius.cn/models/0512_dragon_v2.glb',
+            // 'https://ball.forgenius.cn/models/long.glb',
+            // 'https://ball.forgenius.cn/models/bear.glb',
+            'https://ball.forgenius.cn/models/bear_left.glb',
             // 'https://ball.forgenius.cn/models/wolf.glb',
           ]
           assets.forEach((url) => {
