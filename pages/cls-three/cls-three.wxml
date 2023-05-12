@@ -42,8 +42,21 @@
   <!-- </view> -->
   <image class="txt" src="https://ball.forgenius.cn/image/T3_Text.png" mode="aspectFit" />
 </view>
+<view class="scan" wx:if="{{showScan && !showLoading}}">
+  <view class="bylift_content">
+    <view class="scan_title">开始观赛前先定位</view>
+    <view class="erect_img">
+      <css-animation width="578" height="358" count="60" duration="2" url="https://sightppp.oss-cn-shanghai.aliyuncs.com/projects/ARNav/css_sprites3.png"></css-animation>
+    </view>
+    <view class="erect_tip">
+      <view wx:if="{{!firstLocalized}}">请竖起手机缓慢扫描空间</view>
+      <view wx:if="{{!firstLocalized}}">对准更容易识别哦~</view>
+      <view wx:if="{{firstLocalized}}">定位成功~</view>
+    </view>
+  </view>
+</view>
 <image class="lp_bg" wx:if="{{!showLoading}}" src="https://ball.forgenius.cn/image/T4_beijingdiejia1.png" mode="aspectFill"/>
-<view class="back_btn" wx:if="{{!showLoading}}" bindtap="bindBack">
+<view class="back_btn" bindtap="bindBack">
   <image src="https://ball.forgenius.cn/image/T3_button_FH.png" mode="aspectFit"/>
 </view>
 <!-- <view class="enter lp_btn" wx:if="{{!showLoading && !isRecorder}}" bindtap="startRecoder">

@@ -36,6 +36,8 @@ Page({
     progress: 3,
     // height: app.globalData.height ,
     recorded: false,
+    showScan: true,
+    firstLocalized: false
   },
   startRecoder() {
     this.setData({
@@ -401,6 +403,12 @@ Page({
    */
   onClsResult(clsRes) {
     console.log('cls scc', clsRes);
+    if (!this.data.firstLocalized) {
+      this.setData({firstLocalized: true});
+      setTimeout(() => {
+        this.setData({ showScan: false });
+      }, 1000);
+    }
   },
   /**
    * cls 识别失败
