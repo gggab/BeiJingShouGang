@@ -45,7 +45,7 @@
   </view> -->
   <image class="txt" src="https://ball.forgenius.cn/image/T3_Text.png" mode="aspectFit" />
 </view>
-<view class="scan" wx:if="{{showScan && !showLoading}}">
+<view class="scan" wx:if="{{showScan && !showLoading && isReadied}}">
   <view class="bylift_content">
     <view class="scan_title">开始观赛前先定位</view>
     <view class="erect_img">

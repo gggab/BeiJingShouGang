@@ -41,9 +41,16 @@ export class threeScene {
         this.models = [];
         this.animations = [];
         this.playing = false;
+        this._isReadied = false;
     }
     get camera() {
         return this._camera;
+    }
+    get isReadied() {
+        return this._isReadied;
+    }
+    set isReadied(value) {
+        this._isReadied = value
     }
     render(frame, clsWorldMatrix) {
         this.yuvBehavior.renderGL(frame);
@@ -62,7 +69,7 @@ export class threeScene {
                 this.camera.matrixWorldInverse.getInverse(this.camera.matrixWorld);
                 this.play();
             }
-            const projectionMatrix = camera.getProjectionMatrix(0.01, 1000)
+            const projectionMatrix = camera.getProjectionMatrix(0.1, 100000)
             this.camera.projectionMatrix.fromArray(projectionMatrix)
             this.camera.projectionMatrixInverse.getInverse(this.camera.projectionMatrix)
             // this.setProjectOnce = false;
@@ -85,7 +92,8 @@ export class threeScene {
         // this._camera.matrixWorld.fromArray(matrix);
     }
     play() {
-        if (this.playing) {
+        // 等待所有模型准备好，同时云识别定位成功在开始播放
+        if (this.playing || !this._isReadied) {
             return;
         }
         this.playing = true;
@@ -98,27 +106,30 @@ export class threeScene {
     }
     // 加载一个gltf模型
     async loadModel(url) {
-        const loader = new this.THREE.GLTFLoader();
-        loader.load(url, gltf => {
-            const scene = gltf.scene;
-            const animations = gltf.animations;
-            const mixer = new this.THREE.AnimationMixer(scene);
-            for (let i = 0; i < animations.length; i++) {
-                const clip = animations[i]
-                console.log(clip.name);
-            }
-            if (animations.length >= 1) {
-                const clip = animations[0];
-                const action = mixer.clipAction(clip);
-                action.setLoop(this.THREE.LoopOnce);
-                // action.play();
-                this.animations.push(action);
-            }
-            scene._mixer = mixer;
-            this.mixers = this.mixers || [];
-            this.mixers.push(mixer);
-            this.models.push(scene);
-            // this.scene.add(scene);
+        return new Promise((resolve, reject) => {
+            const loader = new this.THREE.GLTFLoader();
+            loader.load(url, gltf => {
+                const scene = gltf.scene;
+                const animations = gltf.animations;
+                const mixer = new this.THREE.AnimationMixer(scene);
+                for (let i = 0; i < animations.length; i++) {
+                    const clip = animations[i]
+                    console.log(clip.name);
+                }
+                if (animations.length >= 1) {
+                    const clip = animations[0];
+                    const action = mixer.clipAction(clip);
+                    action.setLoop(this.THREE.LoopOnce);
+                    // action.play();
+                    this.animations.push(action);
+                }
+                scene._mixer = mixer;
+                this.mixers = this.mixers || [];
+                this.mixers.push(mixer);
+                this.models.push(scene);
+                // this.scene.add(scene);
+                resolve();
+            })
         })
     }
     updateAnimation() {

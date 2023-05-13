@@ -37,6 +37,7 @@ Page({
     // height: app.globalData.height ,
     recorded: false,
     showScan: true,
+    isReadied: false, // 等待模型准备好
     firstLocalized: false,
     showFinal: false
   },
@@ -106,11 +107,12 @@ Page({
             if (this.data.progress < 94) {
               this.setData({ progress: this.data.progress + 5 });
             }
-          }, 34);
+          }, 200);
           await Promise.all(assetsLoaderPromises);
           // 加载完成后，清除进度更新
           clearInterval(intervalId);
-          this.setData({ progress: 100 });
+          this.setData({ progress: 100, isReadied: true });
+          this.threeScene.isReadied = true; // 通知模型都加载好了
           // 延迟1ms，隐藏进度条
           setTimeout(() => {
             this.setData({ showLoading: false });
