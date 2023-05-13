@@ -26,8 +26,7 @@ Page({
     cameraHeight: `${sysInfo.windowHeight * 0.8}px`,
 
     running: true,
-    // minInterval: 1000, // 识别间隔
-    // motion: true,
+    minInterval: 3000, // 识别间隔
     // showScan: false,
     load3d: false,
     playingAnimation: false,
