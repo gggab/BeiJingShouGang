@@ -1,7 +1,8 @@
 {
   "usingComponents": {
     "clsclient": "plugin://SPARPlugin/spar-clsvkclient",
-    "playcanvas": "plugin://SPARPlugin/spar-playcanvas"
+    "playcanvas": "plugin://SPARPlugin/spar-playcanvas",
+    "page-addon": "../../components/page-addon/page-addon"
   },
   "disableScroll": true
 }

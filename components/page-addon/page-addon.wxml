@@ -1,7 +1,7 @@
 <!--loading-->
 <view class="loading" wx:if="{{showLoading}}">
   <image class="qiu_bg" src="https://ball.forgenius.cn/image/T3_beijingdiejia2.png" mode="aspectFit" />
-  <view class="qiu_box">
+  <!-- <view class="qiu_box">
     <image wx:if="{{xlz==0}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ00.png" mode="aspectFit" />
     <image wx:if="{{xlz==1}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ01.png" mode="aspectFit" />
     <image wx:if="{{xlz==2}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ02.png" mode="aspectFit" />
@@ -34,11 +34,11 @@
     <image wx:if="{{xlz==29}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ29.png" mode="aspectFit" />
     <image wx:if="{{xlz==30}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ30.png" mode="aspectFit" />
     <view class="prog">{{progress}}%</view>
-  </view>
-  <!-- <view class="qiu_box">
-    <css-animation class="qiu" width="210" height="210" count="11" duration="1" url="https://ball.forgenius.cn/image/lq.png"></css-animation>
-    <view class="prog">{{progress}}%</view>
   </view> -->
+  <view class="qiu_box">
+    <css-animation width="250" height="250" count="31" duration="1" url="https://ball.forgenius.cn/image/T_LQ_XLZ.png"></css-animation>
+    <view class="prog">{{progress}}%</view>
+  </view>
   <image class="txt" src="https://ball.forgenius.cn/image/T3_Text.png" mode="aspectFit" />
 </view>
 <!-- 扫描框 -->
@@ -64,8 +64,11 @@
 <block class="final" wx:if="{{showFinal}}">
   <image class="full" mode="aspectFill" src="https://ball.forgenius.cn/image/T1_beijing.jpg"></image>
   <image class="full" mode="aspectFit" src="https://ball.forgenius.cn/image/T1_beijingdiejia1.png"></image>
-  <image class="full" mode="aspectFit" src="https://ball.forgenius.cn/image/T_BJ_3.png"></image>
-  <button class="downloadBtn" bind:tap="downloadVideoHandler" style="width: 500rpx;height: 96rpx;"></button>
+  <!-- <image class="full" mode="aspectFit" src="https://ball.forgenius.cn/image/T_BJ_3.png"></image> -->
+  <image class="full" mode="aspectFit" src="https://ball.forgenius.cn/image/T_BJ_3_1.png"></image>
+  <!-- <button class="downloadBtn" bind:tap="downloadVideoHandler" style="width: 500rpx;height: 96rpx;"></button> -->
+  <image class="qrcode" mode="aspectFit" src="https://ball.forgenius.cn/image/T_EWM.jpg"></image>
 </block>
 <!-- 预加载序列帧 -->
 <image src="https://ball.forgenius.cn/image/css_sprites3.png" style="width: 0px;height: 0px;"></image>
+<image src="https://ball.forgenius.cn/image/lq.png" style="width: 0px;height: 0px;"></image>
