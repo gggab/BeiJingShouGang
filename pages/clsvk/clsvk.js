@@ -13,13 +13,7 @@ Page({
     xlz: 0,
     progress: 0,
     showLoading: true,
-    // // 新园区
-    // clsConfig: {
-    //   apiKey: "da795ff1828d676dab9aaf9c018fe6eb",
-    //   apiSecret: "4e34c727701c60ba10435d628c485137564e932b6dd50983389894b9d8ffdade",
-    //   clsAppId: "98e15642624043b7992e70c862818b24",
-    //   arannotationId: "8233a115b0857f2d46d1bb18aaf60b75"
-    // },
+
     // 首钢
     clsConfig: {
       apiKey: "c35172addcdff7780f4ca593b38520c7",
