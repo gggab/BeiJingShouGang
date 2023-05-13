@@ -56,7 +56,7 @@
       <view wx:if="{{!firstLocalized}}">对准更容易识别哦~</view>
       <view wx:if="{{firstLocalized}}">定位成功~</view> -->
       <image wx:if="{{!firstLocalized}}" src="https://ball.forgenius.cn/image/T_DD_ZI_QSQSJ.png" mode="aspectFit" style="width: 500rpx;height: 100rpx;" />
-      <image wx:if="{{firstLocalized}}" src="https://ball.forgenius.cn/image/T_DD_ZI_DWCG.png" mode="aspectFit" style="width: 200rpx;height: 100rpx;" />
+      <image wx:if="{{firstLocalized}}" src="https://ball.forgenius.cn/image/T_ZI_GWCD.png" mode="aspectFit" style="width: 300rpx;height: 100rpx;" />
     </view>
   </view>
 </view>
