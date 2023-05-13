@@ -24,8 +24,8 @@ Page({
     clsConfig: {
       apiKey: "c35172addcdff7780f4ca593b38520c7",
       apiSecret: "fb4c0a2f89cf64dc7cf2a63a7c5472029a05213e22688a3cc443a7dc39d227d9",
-      clsAppId: "e51e02c9d50a45af9a3c1b39bb8852cc",
-      arannotationId: "77c4a106e869c9a07dc941efb3bad19a"
+      clsAppId: "991ab00f63ec44c6bb6282da36b969eb",
+      arannotationId: "123401934e71bd6663d47495dcf7ba14"
     },
 
     cameraWidth: `${sysInfo.windowWidth}px`,
@@ -37,7 +37,7 @@ Page({
     // showScan: false,
     load3d: false,
 
-    projectUrl: 'https://ball.forgenius.cn/PlayBasketball_0507_3',
+    projectUrl: 'https://ball.forgenius.cn/PlayBasketball_0513_5',
     sceneFileName: '1729120.json',
     // projectUrl: 'https://sightp-tour-cdn.sightp.com/wxapp/apps/Test/pdrjy_office_v1',
     // sceneFileName: '1434681.json',
