@@ -1,0 +1,71 @@
+<!--loading-->
+<view class="loading" wx:if="{{showLoading}}">
+  <image class="qiu_bg" src="https://ball.forgenius.cn/image/T3_beijingdiejia2.png" mode="aspectFit" />
+  <view class="qiu_box">
+    <image wx:if="{{xlz==0}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ00.png" mode="aspectFit" />
+    <image wx:if="{{xlz==1}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ01.png" mode="aspectFit" />
+    <image wx:if="{{xlz==2}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ02.png" mode="aspectFit" />
+    <image wx:if="{{xlz==3}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ03.png" mode="aspectFit" />
+    <image wx:if="{{xlz==4}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ04.png" mode="aspectFit" />
+    <image wx:if="{{xlz==5}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ05.png" mode="aspectFit" />
+    <image wx:if="{{xlz==6}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ06.png" mode="aspectFit" />
+    <image wx:if="{{xlz==7}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ07.png" mode="aspectFit" />
+    <image wx:if="{{xlz==8}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ08.png" mode="aspectFit" />
+    <image wx:if="{{xlz==9}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ09.png" mode="aspectFit" />
+    <image wx:if="{{xlz==10}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ10.png" mode="aspectFit" />
+    <image wx:if="{{xlz==11}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ11.png" mode="aspectFit" />
+    <image wx:if="{{xlz==12}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ12.png" mode="aspectFit" />
+    <image wx:if="{{xlz==13}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ13.png" mode="aspectFit" />
+    <image wx:if="{{xlz==14}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ14.png" mode="aspectFit" />
+    <image wx:if="{{xlz==15}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ15.png" mode="aspectFit" />
+    <image wx:if="{{xlz==16}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ16.png" mode="aspectFit" />
+    <image wx:if="{{xlz==17}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ17.png" mode="aspectFit" />
+    <image wx:if="{{xlz==18}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ18.png" mode="aspectFit" />
+    <image wx:if="{{xlz==19}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ19.png" mode="aspectFit" />
+    <image wx:if="{{xlz==20}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ20.png" mode="aspectFit" />
+    <image wx:if="{{xlz==21}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ21.png" mode="aspectFit" />
+    <image wx:if="{{xlz==22}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ22.png" mode="aspectFit" />
+    <image wx:if="{{xlz==23}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ23.png" mode="aspectFit" />
+    <image wx:if="{{xlz==24}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ24.png" mode="aspectFit" />
+    <image wx:if="{{xlz==25}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ25.png" mode="aspectFit" />
+    <image wx:if="{{xlz==26}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ26.png" mode="aspectFit" />
+    <image wx:if="{{xlz==27}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ27.png" mode="aspectFit" />
+    <image wx:if="{{xlz==28}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ28.png" mode="aspectFit" />
+    <image wx:if="{{xlz==29}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ29.png" mode="aspectFit" />
+    <image wx:if="{{xlz==30}}" class="qiu" src="https://ball.forgenius.cn/LQXLZ/LQ30.png" mode="aspectFit" />
+    <view class="prog">{{progress}}%</view>
+  </view>
+  <!-- <view class="qiu_box">
+    <css-animation class="qiu" width="210" height="210" count="11" duration="1" url="https://ball.forgenius.cn/image/lq.png"></css-animation>
+    <view class="prog">{{progress}}%</view>
+  </view> -->
+  <image class="txt" src="https://ball.forgenius.cn/image/T3_Text.png" mode="aspectFit" />
+</view>
+<!-- 扫描框 -->
+<view class="scan" wx:if="{{showScan && !showLoading}}">
+  <view class="bylift_content">
+    <view class="scan_title">开始观赛前先定位</view>
+    <view class="erect_img">
+      <css-animation width="578" height="358" count="60" duration="2" url="https://ball.forgenius.cn/image/css_sprites3.png"></css-animation>
+    </view>
+    <view class="erect_tip">
+      <image wx:if="{{!firstLocalized}}" src="https://ball.forgenius.cn/image/T_DD_ZI_QSQSJ.png" mode="aspectFit" style="width: 500rpx;height: 100rpx;" />
+      <image wx:if="{{firstLocalized}}" src="https://ball.forgenius.cn/image/T_ZI_GWCD.png" mode="aspectFit" style="width: 300rpx;height: 100rpx;" />
+    </view>
+  </view>
+</view>
+<!-- 底部红色遮罩 -->
+<image class="lp_bg" wx:if="{{!showLoading}}" src="https://ball.forgenius.cn/image/T4_beijingdiejia1.png" mode="aspectFill" />
+<!-- 左上返回按钮 -->
+<view class="back_btn" bindtap="bindBack">
+  <image src="https://ball.forgenius.cn/image/T3_button_FH.png" mode="aspectFit" />
+</view>
+<!-- 尾页 -->
+<block class="final" wx:if="{{showFinal}}">
+  <image class="full" mode="aspectFill" src="https://ball.forgenius.cn/image/T1_beijing.jpg"></image>
+  <image class="full" mode="aspectFit" src="https://ball.forgenius.cn/image/T1_beijingdiejia1.png"></image>
+  <image class="full" mode="aspectFit" src="https://ball.forgenius.cn/image/T_BJ_3.png"></image>
+  <button class="downloadBtn" bind:tap="downloadVideoHandler" style="width: 500rpx;height: 96rpx;"></button>
+</block>
+<!-- 预加载序列帧 -->
+<image src="https://ball.forgenius.cn/image/css_sprites3.png" style="width: 0px;height: 0px;"></image>

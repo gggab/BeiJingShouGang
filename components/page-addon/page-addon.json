@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "css-animation":"../css-animation/index"
+  }
+}

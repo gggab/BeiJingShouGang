@@ -1,0 +1,6 @@
+.yalc/
+node_modules/
+yarn.lock
+yalc.lock
+**.DS_Store
+*/**.DS_Store
