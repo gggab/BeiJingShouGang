@@ -62,12 +62,12 @@
 </view>
 <!-- 尾页 -->
 <block class="final" wx:if="{{showFinal}}">
-  <image class="full" mode="aspectFill" src="https://ball.forgenius.cn/image/T1_beijing.jpg"></image>
-  <image class="full" mode="aspectFit" src="https://ball.forgenius.cn/image/T1_beijingdiejia1.png"></image>
+  <image class="full" mode="aspectFill" src="https://ball.forgenius.cn/image/end.jpg"></image>
+  <!-- <image class="full" mode="aspectFit" src="https://ball.forgenius.cn/image/T1_beijingdiejia1.png"></image> -->
   <!-- <image class="full" mode="aspectFit" src="https://ball.forgenius.cn/image/T_BJ_3.png"></image> -->
-  <image class="full" mode="aspectFit" src="https://ball.forgenius.cn/image/T_BJ_3_1.png"></image>
+  <!-- <image class="full" mode="aspectFit" src="https://ball.forgenius.cn/image/T_BJ_3_1.png"></image> -->
   <!-- <button class="downloadBtn" bind:tap="downloadVideoHandler" style="width: 500rpx;height: 96rpx;"></button> -->
-  <image class="qrcode" mode="aspectFit" src="https://ball.forgenius.cn/image/T_EWM.jpg"></image>
+  <!-- <image class="qrcode" mode="aspectFit" src="https://ball.forgenius.cn/image/T_EWM.jpg"></image> -->
 </block>
 <!-- 预加载序列帧 -->
 <image src="https://ball.forgenius.cn/image/css_sprites3.png" style="width: 0px;height: 0px;"></image>
