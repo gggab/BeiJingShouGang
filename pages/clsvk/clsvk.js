@@ -29,7 +29,7 @@ Page({
     load3d: false,
     playingAnimation: false,
 
-    projectUrl: 'https://ball.forgenius.cn/PlayBasketball_0513_7',
+    projectUrl: 'https://ball.forgenius.cn/PlayBasketball_0514_1',
     sceneFileName: '1729120.json',
     // enhanceDevtools: sysInfo.platform === 'devtools',
     // loadScripts,
@@ -113,9 +113,9 @@ Page({
         this._camera3d.setLocalScale(s);
       } else {
         // this._camera3d.worldTransform.set(data.vkCameraPose);
-        console.log(data.vkCameraPose)
+        // console.log(data.vkCameraPose)
         let mat4 = new this._pc.Mat4().set(data.vkCameraPose);
-        console.log(mat4);
+        // console.log(mat4);
         let p = mat4.getTranslation();
         let e = mat4.getEulerAngles();
         let s = mat4.getScale();
@@ -201,7 +201,7 @@ Page({
 
     this._entitys = [];
     this._app3d.scene.root.children.forEach(entity => {
-      if (entity.name === '0513_dragon_animation_v2' || entity.name === '0513_eagle_animation_right') {
+      if (entity.name === '0513_dragon_animation_left' || entity.name === '0513_eagle_animation_right') {
         entity.enabled = false;
         // entity.animation.loop = false;
         this._entitys.push(entity);
