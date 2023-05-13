@@ -129,11 +129,11 @@ Page({
   // 控制动画播放
   play() {
     if (!this.data.playingAnimation) return;
-    let isAnimationEnd = true; //动画是否结束
+    let isAnimationEnd = false; //动画是否结束
     this._entitys.forEach(entity => {
       entity.enabled = true;
       const rate = entity.animation.currentTime / entity.animation.duration;// 计算动画播放进度
-      isAnimationEnd = isAnimationEnd && rate > 0.99 ? true : false; // 比例大于0.99视为结束
+      isAnimationEnd = rate > 0.99 ? true : false; // 比例大于0.99视为结束
     })
     if (isAnimationEnd) {
       // console.log('动画都结束啦');
