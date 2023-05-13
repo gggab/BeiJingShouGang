@@ -189,5 +189,17 @@ Page({
     });
 
     this.setData({ running: true });
+  },
+  onunload() {
+    this._pc = null;
+    this._app3d = null;
+    this._camera3d = null;
+    this._canvas3d = null;
+    this._gl = null;
+
+    this.clsclient = null;
+    this.vkCtx = null;
+
+    this._entitys = null;
   }
 });
