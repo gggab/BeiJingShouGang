@@ -72,6 +72,9 @@ Page({
         this.canvas = res[0].node
         if (wx.getSystemInfoSync().platform == "devtools") {
           this.threeScene = new threeScene(this.canvas);
+          this.threeScene.onPlayEnd = () => {
+            this.onAnimPlayEnd();
+          }
         } else {
           await this.initVK();
         }
@@ -174,7 +177,7 @@ Page({
           if (frame) {
             if (that.threeScene) {
               const clsWorldMatrix = that.clsClient?.getPoseInMap(frame.camera.viewMatrix);
-              if(clsWorldMatrix){
+              if (clsWorldMatrix) {
                 that.playAudio();
               }
               that.threeScene.render(frame, clsWorldMatrix);
@@ -207,7 +210,7 @@ Page({
               })
               this.videotempFilePath = tempFilePath;
               console.log(tempFilePath);
-              
+
               // 这里不写入相册，需要用户手动点击
               // wx.saveVideoToPhotosAlbum({
               //   filePath: tempFilePath,
@@ -235,6 +238,10 @@ Page({
         }
         session.requestAnimationFrame(onFrame)
         that.threeScene = new threeScene(canvas);
+        this.threeScene.onPlayEnd = () => {
+          this.onAnimPlayEnd();
+        }
+
         resolve();
       })
     })
@@ -260,6 +267,11 @@ Page({
 
     this.audios = [innerAudioContext, innerAudioContext2];
   },
+  stopAudio() {
+    this.audios.forEach(au=>{
+      au.stop();
+    });
+  },
   async stopRecoder() {
     if (this.videotempFilePath) return;
     const that = this;
@@ -282,14 +294,23 @@ Page({
       filePath: this.videotempFilePath,
       success: (res) => {
         console.log('保存成功');
+        wx.showToast({
+          title: '保存成功',
+          duration: 1000
+        })
         this.videotempFilePath = '';
         this.setData({
           recorded: false,
           showFinal: true
         });
+        this.stopAudio();
       },
       fail: (res) => {
         console.log('保存失败', res);
+        wx.showToast({
+          title: '保存失败',
+          duration: 1000
+        })
       }
     });
   },
@@ -488,6 +509,13 @@ Page({
       }
     })
   },
+  onAnimPlayEnd() {
+    // 动画播放完成，如果不在录制直接展示最后一页
+    if (!this.data.isRecorder) {
+      this.setData({ showFinal: true });
+      this.stopAudio();
+    }
+  },
   analysis() {
     if (!this._lastTs) this._lastTs = Date.now()
     const ts = Date.now()
@@ -510,7 +538,7 @@ Page({
   onClsResult(clsRes) {
     console.log('cls scc', clsRes);
     if (!this.data.firstLocalized) {
-      this.setData({firstLocalized: true});
+      this.setData({ firstLocalized: true });
       setTimeout(() => {
         this.setData({ showScan: false });
       }, 1000);

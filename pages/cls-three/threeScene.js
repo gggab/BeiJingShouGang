@@ -91,7 +91,7 @@ export class threeScene {
     setWorldMatrix(matrix) {
         // this._camera.matrixWorld.fromArray(matrix);
     }
-    play() {
+    play(onPlayEnd) {
         // 等待所有模型准备好，同时云识别定位成功在开始播放
         if (this.playing || !this._isReadied) {
             return;
@@ -103,6 +103,23 @@ export class threeScene {
         this.animations.forEach(element => {
             element.play();
         });
+        if (this.onPlayEnd) {
+          console.log("设置动画完成监听");
+          let pormises = [];
+          this.animations.forEach(action =>{
+            let p = new Promise((resolve)=>{
+              action.getMixer().addEventListener("finished",()=>{
+                console.log("有一个动画播放完成了")
+                resolve();
+              });
+            });
+            pormises.push(p);
+          });
+          Promise.all(pormises).then(()=>{
+            console.log("全部动画播放完成");
+            this.onPlayEnd();
+          });
+        }
     }
     // 加载一个gltf模型
     async loadModel(url) {
