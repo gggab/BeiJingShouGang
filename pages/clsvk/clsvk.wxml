@@ -41,5 +41,5 @@
     progress="{{progress}}"
     showScan="{{showScan}}"
     showFinal="{{showFinal}}"
-    firstLocalized="{{firstLocalized}}"
+    firstLocalized="{{playingAnimation}}"
   ></page-addon>

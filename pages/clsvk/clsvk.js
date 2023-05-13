@@ -9,8 +9,6 @@ Page({
     canvasL: 0,
     // 是否显示左上角的调试信息
     showDebugPanel: false,
-    // xlzUrl: "https://ball.forgenius.cn/LQXLZ/LQ00.png",
-    xlz: 0,
     progress: 0,
     showLoading: true,
 
@@ -27,7 +25,7 @@ Page({
 
     running: true,
     minInterval: 3000, // 识别间隔
-    // showScan: false,
+    showScan: false,
     load3d: false,
     playingAnimation: false,
 
@@ -105,9 +103,26 @@ Page({
 
       if (data.clsCameraPose) {
         this.play();
-        this._camera3d.worldTransform.set(data.clsCameraPose);
+        // this._camera3d.worldTransform.set(data.clsCameraPose);
+        let mat4 = new this._pc.Mat4().set(data.clsCameraPose);
+        let p = mat4.getTranslation();
+        let e = mat4.getEulerAngles();
+        let s = mat4.getScale();
+        this._camera3d.setPosition(p);
+        this._camera3d.setEulerAngles(e);
+        this._camera3d.setLocalScale(s);
       } else {
-        this._camera3d.worldTransform.set(data.vkCameraPose);
+        // this._camera3d.worldTransform.set(data.vkCameraPose);
+        console.log(data.vkCameraPose)
+        let mat4 = new this._pc.Mat4().set(data.vkCameraPose);
+        console.log(mat4);
+        let p = mat4.getTranslation();
+        let e = mat4.getEulerAngles();
+        let s = mat4.getScale();
+        this._camera3d.setPosition(p);
+        this._camera3d.setEulerAngles(e);
+        this._camera3d.setLocalScale(s);
+
       }
     }
   },
@@ -123,15 +138,24 @@ Page({
     if (isAnimationEnd) {
       // console.log('动画都结束啦');
       this.setData({
-        playingAnimation: false
+        playingAnimation: false,
+        showFinal: true
       })
     }
   },
   onClsClientResult(e) {
     if (e.detail.statusCode == 0) {
-      this.setData({
-        playingAnimation: true
-      })
+      if (!this.firstLocalized) {
+        this.firstLocalized = true;
+        this.setData({
+          playingAnimation: true
+        });
+        setTimeout(() => {
+          this.setData({
+            showScan:false
+          })
+        }, 1000);
+      }
       // console.log("onClsClientResult", e.detail);
       // 识别成功
     } else {
@@ -161,7 +185,10 @@ Page({
   },
   on3dLoad: function (arg) {
     console.log('3d Loaded');
-    this.setData({ showLoading: false });
+    this.setData({ 
+      showLoading: false,
+      showScan: true
+     });
 
     this._pc = arg.detail.pc;
     this._app3d = arg.detail.app;
