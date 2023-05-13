@@ -36,11 +36,10 @@ Page({
     // motion: true,
     // showScan: false,
     load3d: false,
+    playingAnimation: false,
 
-    projectUrl: 'https://ball.forgenius.cn/PlayBasketball_0513_5',
+    projectUrl: 'https://ball.forgenius.cn/PlayBasketball_0513_7',
     sceneFileName: '1729120.json',
-    // projectUrl: 'https://sightp-tour-cdn.sightp.com/wxapp/apps/Test/pdrjy_office_v1',
-    // sceneFileName: '1434681.json',
     // enhanceDevtools: sysInfo.platform === 'devtools',
     // loadScripts,
     // loadNetworkScripts: {},
@@ -112,14 +111,34 @@ Page({
       this._camera3d.camera.projectionMatrix.set(vp.data);
 
       if (data.clsCameraPose) {
+        this.play();
         this._camera3d.worldTransform.set(data.clsCameraPose);
       } else {
         this._camera3d.worldTransform.set(data.vkCameraPose);
       }
     }
   },
+  // 控制动画播放
+  play() {
+    if (!this.data.playingAnimation) return;
+    let isAnimationEnd = true; //动画是否结束
+    this._entitys.forEach(entity => {
+      entity.enabled = true;
+      const rate = entity.animation.currentTime / entity.animation.duration;// 计算动画播放进度
+      isAnimationEnd = isAnimationEnd && rate > 0.99 ? true : false; // 比例大于0.99视为结束
+    })
+    if (isAnimationEnd) {
+      // console.log('动画都结束啦');
+      this.setData({
+        playingAnimation: false
+      })
+    }
+  },
   onClsClientResult(e) {
     if (e.detail.statusCode == 0) {
+      this.setData({
+        playingAnimation: true
+      })
       // console.log("onClsClientResult", e.detail);
       // 识别成功
     } else {
@@ -160,42 +179,15 @@ Page({
 
     this.vkCtx?.setApp3d(this._app3d);
 
-    // if (!this.annitations) {
-    //   this._app3d.on("setAnnotation", (annitations) => {
-    //     annitations.forEach(anno => {
-    //       let cube = new this._pc.Entity();
-    //       cube.addComponent("model", {
-    //         type: "box"
-    //       })
-    //       let p = anno.transform.position;
-    //       let r = anno.transform.rotation;
-    //       let s = anno.transform.scale;
-    //       cube.setLocalPosition(p.x, p.y, p.z);
-    //       cube.setLocalRotation(r.x, r.y, r.z, r.w);
-    //       cube.setLocalScale(s.x, s.y, s.z);
-    //     })
-    //   })
-    // }
-    // if (this.annitations) {
-    //   this.annitations.forEach(anno => {
-    //     let cube = new this._pc.Entity();
-    //     cube.addComponent("model", {
-    //       type: "box"
-    //     })
-    //     let p = anno.transform.position;
-    //     let r = anno.transform.rotation;
-    //     let s = anno.transform.scale;
-    //     cube.setLocalPosition(p.x, p.y, p.z);
-    //     cube.setLocalRotation(r.x, r.y, r.z, r.w);
-    //     cube.setLocalScale(s.x, s.y, s.z);
-    //   })
-    // }
+    this._entitys = [];
+    this._app3d.scene.root.children.forEach(entity => {
+      if (entity.name === '0513_dragon_animation_v2' || entity.name === '0513_eagle_animation_right') {
+        entity.enabled = false;
+        // entity.animation.loop = false;
+        this._entitys.push(entity);
+      }
+    });
+
     this.setData({ running: true });
-  },
-  // preview() {
-  //   wx.previewImage({ urls: ["https://mp.easyar.cn/artravel/puruan_scan_sample.jpg"] });
-  // },
-  // dismiss() {
-  //   this.setData({ showScan: false });
-  // },
+  }
 });
