@@ -89,4 +89,5 @@
   <image class="full" mode="aspectFill" src="https://ball.forgenius.cn/image/T1_beijing.jpg"></image>
   <image class="full" mode="aspectFit" src="https://ball.forgenius.cn/image/T1_beijingdiejia1.png"></image>
   <image class="full" mode="aspectFit" src="https://ball.forgenius.cn/image/T_BJ_3.png"></image>
+  <button class="downloadBtn" bind:tap="downloadVideoHandler">下载视频</button>
 </block>

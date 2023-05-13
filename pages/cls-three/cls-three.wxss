@@ -179,3 +179,12 @@
   top: 0;
   z-index: 3000;
 }
+.downloadBtn{
+  position: absolute;
+  width: 300rpx;
+  height: 100rpx;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3001;
+}
