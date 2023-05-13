@@ -1,5 +1,6 @@
 {
   "usingComponents": {
-    "css-animation":"../../components/css-animation/index"
+    "css-animation":"../../components/css-animation/index",
+    "page-addon":"../../components/page-addon/page-addon"
   }
 }
