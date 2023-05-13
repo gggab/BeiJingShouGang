@@ -187,7 +187,7 @@ Page({
     console.log('3d Loaded');
     this.setData({ 
       showLoading: false,
-      showScan: true
+      showScan: this.data.playingAnimation ? false : true
      });
 
     this._pc = arg.detail.pc;
